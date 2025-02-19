@@ -161,9 +161,9 @@ const preview_container = (theme: any, backgroundImage: string | null) => css`
 
   width: 100%;
   aspect-ratio: 4/5;
-  border-radius: ${theme.borderRadius.sm};
+  border-radius: ${theme.borderRadius.xl};
 
-  background-color: ${theme.colors.bg};
+  background-color: ${theme.colors.wh};
   background-image: ${backgroundImage ? `url(${backgroundImage})` : "none"};
   background-size: cover;
   background-position: center;

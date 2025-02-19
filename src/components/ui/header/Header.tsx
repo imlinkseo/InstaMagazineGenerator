@@ -19,9 +19,9 @@ const header = (theme: any) => css`
   align-items: center;
   justify-content: space-between;
 
-  padding: ${theme.padding.md};
-  border-radius: ${theme.borderRadius.md};
-  background-color: ${theme.colors.bt};
+  padding: ${theme.padding.md} ${theme.padding.lg};
+  border-radius: ${theme.borderRadius.xl};
+  background-color: ${theme.colors.wh};
 `;
 
 const title_desc_container = (theme: any) => css`
@@ -35,7 +35,7 @@ const title_desc_container = (theme: any) => css`
 `;
 
 const title = (theme: any) => css`
-  color: ${theme.colors.wh};
+  color: ${theme.colors.bt};
   font-size: ${theme.fontSize.lg};
   font-weight: ${theme.fontWeight.bold};
 

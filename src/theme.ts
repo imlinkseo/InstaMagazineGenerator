@@ -15,7 +15,7 @@ export const theme: Theme = {
     bg: "#F9F9F9",
     wt: "rgba(255,255,255,.5)",
     bt: "rgba(0,0,0,.9)",
-    pc: "#FFB03B",
+    pc: "rgb(255, 107, 229)",
   },
   fontSize: {
     xs: "0.6rem",

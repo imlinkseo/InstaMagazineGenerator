@@ -23,5 +23,5 @@ const container = (theme: any) => css`
   height: 100%;
   min-height: 100vh;
 
-  background-color: ${theme.colors.wh};
+  background-color: ${theme.colors.bg};
 `;
