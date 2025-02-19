@@ -1,15 +1,14 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
-
+import { ReactComponent as Generate } from "@svgs/generate.svg";
 import { ReactComponent as Instagram } from "@svgs/instagram.svg";
 
 export default function Header() {
   return (
     <header css={header}>
-      <h1 css={title}>MagazineGenerator</h1>
-      <div css={title_desc_container}>
-        <Instagram />
-      </div>
+      <Generate css={icon} />
+      {/* <h1 css={title}>MagazineGenerator</h1> */}
+      <div css={title_desc_container}>{/* <Instagram /> */}</div>
     </header>
   );
 }
@@ -42,4 +41,10 @@ const title = (theme: any) => css`
   @media (${theme.mediaQuery.md}) {
     font-size: ${theme.fontSize.md};
   }
+`;
+
+const icon = (theme: any) => css`
+  width: 32px;
+  height: 32px;
+  margin-bottom: 4px;
 `;

@@ -13,6 +13,7 @@ export const theme: Theme = {
     bl: "#383838",
     wh: "#FFFFFF",
     bg: "#F9F9F9",
+    b2: "rgba(231,231,231)",
     wt: "rgba(255,255,255,.5)",
     bt: "rgba(0,0,0,.9)",
     pc: "rgb(255, 107, 229)",

@@ -1,6 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
-import { useState, useRef } from "react";
+import { useState, useRef, RefObject } from "react";
+
 import { ReactComponent as Image } from "@svgs/image.svg";
 import { ReactComponent as Delete } from "@svgs/delete.svg";
 
@@ -51,79 +52,24 @@ export default function Generator() {
     logoRef.current?.click();
   };
 
-  const upload = "업로드";
-  const del = "삭제";
-
-  console.log(backgroundImage);
-
   return (
     <div css={container}>
       <div
         className="preview"
         css={(theme) => preview_container(theme, backgroundImage)}
       ></div>
-      <form className="form" css={file_form_container}>
-        <div css={file_input_container}>
-          <label
-            htmlFor="logoImage"
-            onClick={logoImage ? handleLogoImageDelete : handleLogoImageClick}
-            css={label}
-          >
-            로고
-          </label>
-          <input
-            type="file"
-            name="logoImage"
-            id="logoImage"
-            accept="image/*"
-            ref={logoRef}
-            onChange={handleLogoImageChange}
-            css={display_none}
-          />
-          <button
-            type="button"
-            onClick={logoImage ? handleLogoImageDelete : handleLogoImageClick}
-            css={image_upload_button}
-          >
-            {logoImage ? <Delete /> : <Image />}
-            <p>로고 이미지 {logoImage ? del : upload}</p>
-          </button>
-        </div>
-        <div css={file_input_container}>
-          <label
-            htmlFor="backgroundImage"
-            onClick={
-              backgroundImage
-                ? handleBackgroundImageDelete
-                : handleBackgroundImageClick
-            }
-            css={label}
-          >
-            사진
-          </label>
-          <input
-            type="file"
-            name="backgroundImage"
-            id="backgroundImage"
-            accept="image/*"
-            ref={backgroundRef}
-            onChange={handleBackgroundImageChange}
-            css={display_none}
-          />
-          <button
-            type="button"
-            onClick={
-              backgroundImage
-                ? handleBackgroundImageDelete
-                : handleBackgroundImageClick
-            }
-            css={image_upload_button}
-          >
-            {backgroundImage ? <Delete /> : <Image />}
-            <p>배경 이미지 {backgroundImage ? del : upload}</p>
-          </button>
-        </div>
-      </form>
+      <FileInputContainer
+        logoImage={logoImage}
+        handleLogoImageClick={handleLogoImageClick}
+        handleLogoImageChange={handleLogoImageChange}
+        handleLogoImageDelete={handleLogoImageDelete}
+        logoRef={logoRef}
+        backgroundImage={backgroundImage}
+        handleBackgroundImageClick={handleBackgroundImageClick}
+        handleBackgroundImageChange={handleBackgroundImageChange}
+        handleBackgroundImageDelete={handleBackgroundImageDelete}
+        backgroundRef={backgroundRef}
+      />
       <form className="form" css={text_form_container}>
         <div css={text_input_container}>
           <label htmlFor="title" css={label}>
@@ -139,6 +85,102 @@ export default function Generator() {
         </div>
       </form>
     </div>
+  );
+}
+
+interface IFileInputContainer {
+  logoImage: string | null;
+  handleLogoImageClick: () => void;
+  handleLogoImageChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleLogoImageDelete: () => void;
+  logoRef: RefObject<HTMLInputElement>;
+  backgroundImage: string | null;
+  handleBackgroundImageClick: () => void;
+  handleBackgroundImageChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleBackgroundImageDelete: () => void;
+  backgroundRef: RefObject<HTMLInputElement>;
+}
+
+function FileInputContainer(prop: IFileInputContainer) {
+  const {
+    logoImage,
+    handleLogoImageClick,
+    handleLogoImageChange,
+    handleLogoImageDelete,
+    logoRef,
+    backgroundImage,
+    handleBackgroundImageClick,
+    handleBackgroundImageChange,
+    handleBackgroundImageDelete,
+    backgroundRef,
+  } = prop;
+
+  const upload = "업로드";
+  const del = "삭제";
+
+  return (
+    <form className="form" css={file_form_container}>
+      <div css={file_input_container}>
+        <label
+          htmlFor="logoImage"
+          onClick={logoImage ? handleLogoImageDelete : handleLogoImageClick}
+          css={label}
+        >
+          로고
+        </label>
+        <input
+          type="file"
+          name="logoImage"
+          id="logoImage"
+          accept="image/*"
+          ref={logoRef}
+          onChange={handleLogoImageChange}
+          css={display_none}
+        />
+        <button
+          type="button"
+          onClick={logoImage ? handleLogoImageDelete : handleLogoImageClick}
+          css={image_upload_button}
+        >
+          {logoImage ? <Delete /> : <Image />}
+          <p>로고 이미지 {logoImage ? del : upload}</p>
+        </button>
+      </div>
+      <div css={file_input_container}>
+        <label
+          htmlFor="backgroundImage"
+          onClick={
+            backgroundImage
+              ? handleBackgroundImageDelete
+              : handleBackgroundImageClick
+          }
+          css={label}
+        >
+          사진
+        </label>
+        <input
+          type="file"
+          name="backgroundImage"
+          id="backgroundImage"
+          accept="image/*"
+          ref={backgroundRef}
+          onChange={handleBackgroundImageChange}
+          css={display_none}
+        />
+        <button
+          type="button"
+          onClick={
+            backgroundImage
+              ? handleBackgroundImageDelete
+              : handleBackgroundImageClick
+          }
+          css={image_upload_button}
+        >
+          {backgroundImage ? <Delete /> : <Image />}
+          <p>배경 이미지 {backgroundImage ? del : upload}</p>
+        </button>
+      </div>
+    </form>
   );
 }
 
@@ -178,7 +220,7 @@ const text_form_container = (theme: any) => css`
   padding: ${theme.padding.md};
   border-radius: ${theme.borderRadius.sm};
 
-  background-color: ${theme.colors.bt};
+  background-color: ${theme.colors.wh};
 `;
 const file_form_container = (theme: any) => css`
   margin: 0 auto;
@@ -191,7 +233,7 @@ const file_form_container = (theme: any) => css`
   padding: ${theme.padding.md} ${theme.padding.lg};
   border-radius: ${theme.borderRadius.xl};
 
-  background-color: ${theme.colors.bt};
+  background-color: ${theme.colors.wh};
 `;
 
 const file_input_container = (theme: any) =>
@@ -224,7 +266,7 @@ const textarea_input_container = (theme: any) => css`
 `;
 
 const label = (theme: any) => css`
-  color: ${theme.colors.wh};
+  color: ${theme.colors.bt};
   font-size: ${theme.fontSize.md};
   white-space: nowrap;
 `;
