@@ -139,7 +139,7 @@ export function Generator(prop: IForm) {
         cancelText={cancel}
         onCancel={handleCancelContent}
       >
-        {template === "front cover" && handleTitleChange && (
+        {template === "front" && handleTitleChange && (
           <InputText
             name={title_}
             id={title_}
@@ -148,27 +148,25 @@ export function Generator(prop: IForm) {
             onChange={handleTitleChange}
           />
         )}
-        {template === "content default" &&
-          handleTitleChange &&
-          handleDescChange && (
-            <>
-              <InputText
-                name={title_}
-                id={title_}
-                placeholder={title_placeholder}
-                value={content.title ?? ""}
-                onChange={handleTitleChange}
-              />
-              <InputTextArea
-                name={desc_}
-                id={desc_}
-                placeholder={desc_placeholder}
-                value={content.desc ?? ""}
-                onChange={handleDescChange}
-              />
-            </>
-          )}
-        {template === "back cover" && handleDescChange && (
+        {template === "content" && handleTitleChange && handleDescChange && (
+          <>
+            <InputText
+              name={title_}
+              id={title_}
+              placeholder={title_placeholder}
+              value={content.title ?? ""}
+              onChange={handleTitleChange}
+            />
+            <InputTextArea
+              name={desc_}
+              id={desc_}
+              placeholder={desc_placeholder}
+              value={content.desc ?? ""}
+              onChange={handleDescChange}
+            />
+          </>
+        )}
+        {template === "back" && handleDescChange && (
           <InputTextArea
             name={desc_}
             id={desc_}

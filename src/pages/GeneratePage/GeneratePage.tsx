@@ -105,6 +105,7 @@ export default function GeneratePage() {
   const container = (theme: CustomTheme) => css`
     display: flex;
     flex-direction: column;
+    border-bottom: 1px solid ${theme.colors.bt};
   `;
 
   return (

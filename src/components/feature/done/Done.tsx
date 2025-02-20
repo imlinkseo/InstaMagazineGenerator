@@ -24,7 +24,6 @@ export function Done(prop: IDone) {
     display: flex;
     align-items: center;
     gap: 1rem;
-    flex-wrap: Wrap;
 
     padding: ${theme.padding.xs} ${theme.padding.sm};
     background-color: ${theme.colors.wh};

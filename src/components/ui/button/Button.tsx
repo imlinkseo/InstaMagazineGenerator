@@ -61,10 +61,11 @@ export function ButtonRound(prop: IButton) {
 }
 
 export function ButtonSquare(prop: IButton) {
-  const { text, icon, isAvailable, onClick } = prop;
+  const { text, isAvailable, onClick } = prop;
   const theme = useTheme() as CustomTheme;
 
   const container = (theme: CustomTheme, isAvailable: boolean) => css`
+    width: 100%;
     display: flex;
     gap: 1rem;
     align-items: center;

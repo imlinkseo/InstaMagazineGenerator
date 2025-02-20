@@ -25,5 +25,5 @@ const container = (theme: CustomTheme) => css`
   height: 100%;
   min-height: 100vh;
 
-  background-color: ${theme.colors.b2};
+  background-color: ${theme.colors.wh};
 `;

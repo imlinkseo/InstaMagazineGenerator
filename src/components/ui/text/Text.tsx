@@ -68,6 +68,23 @@ export function ButtonText(prop: IText) {
   return <p css={button_text(theme)}>{prop.text}</p>;
 }
 
+export function CaptionText(prop: IText) {
+  const theme = useTheme() as CustomTheme;
+  const caption_text = (theme: CustomTheme) => css`
+    font-family: "Lexend", serif;
+    font-size: ${theme.fontSize.ms};
+    line-height: 1em;
+    color: ${theme.colors.bt};
+    white-space: nowrap;
+
+    @media (${theme.mediaQuery.sm}) {
+      font-size: ${theme.fontSize.sm};
+    }
+  `;
+
+  return <p css={caption_text(theme)}>{prop.text}</p>;
+}
+
 interface ITextStep extends IText {
   isDone: boolean;
 }

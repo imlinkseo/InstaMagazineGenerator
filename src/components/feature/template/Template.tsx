@@ -6,11 +6,11 @@ import { ButtonSquare } from "@components/ui/button/Button";
 import { InfoText } from "@components/ui/text/Text";
 
 const info_ = "choose";
-export const front_cover_ = "front cover";
-export const content_default_ = "content default";
-export const back_cover_ = "back cover";
+export const front_cover_ = "front";
+export const content_default_ = "content";
+export const back_cover_ = "back";
 
-export type TTemplate = "front cover" | "content default" | "back cover" | null;
+export type TTemplate = "front" | "content" | "back" | null;
 
 interface ITemplate {
   template: TTemplate;
@@ -33,30 +33,38 @@ export function Template(prop: ITemplate) {
     border-bottom: 1px solid ${theme.colors.bt};
   `;
 
+  const inner_container = css`
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  `;
+
   return (
     <div css={container}>
       <InfoText text={info_} isDone={template !== null} />
-      <ButtonSquare
-        text={front_cover_}
-        isAvailable={template === front_cover_}
-        onClick={() => {
-          setTemplate(front_cover_);
-        }}
-      />
-      <ButtonSquare
-        text={content_default_}
-        isAvailable={template === content_default_}
-        onClick={() => {
-          setTemplate(content_default_);
-        }}
-      />
-      <ButtonSquare
-        text={back_cover_}
-        isAvailable={template === back_cover_}
-        onClick={() => {
-          setTemplate(back_cover_);
-        }}
-      />
+      <div css={inner_container}>
+        <ButtonSquare
+          text={front_cover_}
+          isAvailable={template === front_cover_}
+          onClick={() => {
+            setTemplate(front_cover_);
+          }}
+        />
+        <ButtonSquare
+          text={content_default_}
+          isAvailable={template === content_default_}
+          onClick={() => {
+            setTemplate(content_default_);
+          }}
+        />
+        <ButtonSquare
+          text={back_cover_}
+          isAvailable={template === back_cover_}
+          onClick={() => {
+            setTemplate(back_cover_);
+          }}
+        />
+      </div>
     </div>
   );
 }

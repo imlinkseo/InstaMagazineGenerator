@@ -4,11 +4,11 @@ import { TTemplate } from "@components/feature/template/Template";
 export const useIsDone = () => {
   const handleIsContentDone = (template: TTemplate, content: Tcontent) => {
     switch (template) {
-      case "front cover":
+      case "front":
         return content.title !== null;
-      case "back cover":
+      case "back":
         return content.desc !== null;
-      case "content default":
+      case "content":
         return content.title && content.desc ? true : false;
       default:
         return content.title && content.desc ? true : false;
