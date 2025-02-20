@@ -20,11 +20,17 @@ interface ITemplate {
 export function Template(prop: ITemplate) {
   const { template, setTemplate } = prop;
 
+  const theme = useTheme() as CustomTheme;
+
   const container = css`
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 0.5rem;
     flex-wrap: Wrap;
+
+    padding: ${theme.padding.xs} ${theme.padding.sm};
+    background-color: ${theme.colors.wh};
+    border-bottom: 1px solid ${theme.colors.bt};
   `;
 
   return (

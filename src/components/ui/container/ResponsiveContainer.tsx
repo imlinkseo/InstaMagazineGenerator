@@ -17,10 +17,8 @@ export default function ResponsiveContainer(prop: IResponsiveContainer) {
 const container = (theme: CustomTheme) => css`
   display: flex;
   flex-direction: column;
-  gap: 1rem;
 
   margin: 0 auto;
-  padding: ${theme.padding.md};
 
   width: 100%;
   max-width: ${theme.maxWidth};

@@ -53,9 +53,9 @@ const header = (theme: CustomTheme) => css`
   align-items: center;
   justify-content: space-between;
 
-  padding: ${theme.padding.xs} ${theme.padding.sm} ${theme.padding.xs}
-    ${theme.padding.lg};
+  padding: ${theme.padding.xs} ${theme.padding.sm};
   background-color: ${theme.colors.wh};
+  border-bottom: 1px solid ${theme.colors.bt};
 `;
 
 const nav = (theme: CustomTheme) => css`

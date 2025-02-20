@@ -29,7 +29,7 @@ export function ButtonRound(prop: IButton) {
     cursor: pointer;
 
     @media (${theme.mediaQuery.md}) {
-      gap: 0.5rem;
+      gap: 0;
       svg {
         display: none;
       }

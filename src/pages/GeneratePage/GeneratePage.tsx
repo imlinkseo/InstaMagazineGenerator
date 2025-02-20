@@ -105,7 +105,6 @@ export default function GeneratePage() {
   const container = (theme: CustomTheme) => css`
     display: flex;
     flex-direction: column;
-    gap: 1rem;
   `;
 
   return (
@@ -133,9 +132,6 @@ export default function GeneratePage() {
             handleCancelContent={handleCancelContent}
             handleSaveContent={handleSaveContent}
           />
-          {handleIsAllDone(content, template, logo, image) && (
-            <Done isDone={true} handleCapture={handleCapture} />
-          )}
           <Preview
             template={template}
             logo={logo}
@@ -143,6 +139,9 @@ export default function GeneratePage() {
             content={content}
             ref={captureRef}
           />
+          {handleIsAllDone(content, template, logo, image) && (
+            <Done isDone={true} handleCapture={handleCapture} />
+          )}
         </>
       )}
     </div>

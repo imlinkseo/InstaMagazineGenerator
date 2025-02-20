@@ -60,7 +60,7 @@ export function ButtonText(prop: IText) {
     @media (${theme.mediaQuery.md}) {
       font-size: ${theme.fontSize.ms};
     }
-    @media (${theme.mediaQuery.xs}) {
+    @media (${theme.mediaQuery.sm}) {
       font-size: ${theme.fontSize.sm};
     }
   `;
@@ -79,6 +79,10 @@ export function InfoText(prop: ITextStep) {
   const container = css`
     position: relative;
     display: flex;
+
+    @media (${theme.mediaQuery.md}) {
+      display: none;
+    }
   `;
 
   const button_text = (theme: CustomTheme) => css`

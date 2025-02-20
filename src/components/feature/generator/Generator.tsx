@@ -78,10 +78,10 @@ export function Generator(prop: IForm) {
     align-items: center;
     gap: 0.5rem;
     flex-wrap: wrap;
-  `;
 
-  const display_none = css`
-    display: none;
+    padding: ${theme.padding.xs} ${theme.padding.sm};
+    background-color: ${theme.colors.wh};
+    border-bottom: 1px solid ${theme.colors.bt};
   `;
 
   const theme = useTheme() as CustomTheme;

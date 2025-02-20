@@ -28,7 +28,7 @@ export const Preview = forwardRef<HTMLDivElement, IPreview>(
       position: relative;
       overflow: hidden;
 
-      background-color: ${theme.colors.wh};
+      background-color: ${theme.colors.bg};
       background-image: ${image ? `url(${image})` : "none"};
       background-size: cover;
       background-position: center;

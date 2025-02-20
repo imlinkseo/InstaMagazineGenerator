@@ -18,11 +18,18 @@ interface IDone {
 export function Done(prop: IDone) {
   const { isDone, handleCapture } = prop;
 
+  const theme = useTheme() as CustomTheme;
+
   const container = css`
     display: flex;
     align-items: center;
     gap: 1rem;
     flex-wrap: Wrap;
+
+    padding: ${theme.padding.xs} ${theme.padding.sm};
+    background-color: ${theme.colors.wh};
+    border-top: 1px solid ${theme.colors.bt};
+    border-bottom: 1px solid ${theme.colors.bt};
   `;
 
   return (
