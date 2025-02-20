@@ -1,0 +1,56 @@
+/** @jsxImportSource @emotion/react */
+import { CustomTheme } from "src/theme";
+import { css, useTheme } from "@emotion/react";
+import { SetStateAction, useState } from "react";
+import { ButtonSquare } from "@components/ui/button/Button";
+import { InfoText } from "@components/ui/text/Text";
+
+const info_ = "choose";
+export const front_cover_ = "front cover";
+export const content_default_ = "content default";
+export const back_cover_ = "back cover";
+
+export type TTemplate = "front cover" | "content default" | "back cover" | null;
+
+interface ITemplate {
+  template: TTemplate;
+  setTemplate: React.Dispatch<SetStateAction<TTemplate>>;
+}
+
+export function Template(prop: ITemplate) {
+  const { template, setTemplate } = prop;
+
+  const container = css`
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: Wrap;
+  `;
+
+  return (
+    <div css={container}>
+      <InfoText text={info_} isDone={template !== null} />
+      <ButtonSquare
+        text={front_cover_}
+        isAvailable={template === front_cover_}
+        onClick={() => {
+          setTemplate(front_cover_);
+        }}
+      />
+      <ButtonSquare
+        text={content_default_}
+        isAvailable={template === content_default_}
+        onClick={() => {
+          setTemplate(content_default_);
+        }}
+      />
+      <ButtonSquare
+        text={back_cover_}
+        isAvailable={template === back_cover_}
+        onClick={() => {
+          setTemplate(back_cover_);
+        }}
+      />
+    </div>
+  );
+}

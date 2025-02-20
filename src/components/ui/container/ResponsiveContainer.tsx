@@ -1,5 +1,6 @@
 /** @jsxImportSource @emotion/react */
-import { css } from "@emotion/react";
+import { CustomTheme } from "src/theme";
+import { css, useTheme } from "@emotion/react";
 
 export interface IResponsiveContainer {
   children?: React.ReactNode;
@@ -7,10 +8,13 @@ export interface IResponsiveContainer {
 
 export default function ResponsiveContainer(prop: IResponsiveContainer) {
   const { children } = prop;
-  return <div css={container}>{children}</div>;
+
+  const theme = useTheme() as CustomTheme;
+
+  return <div css={container(theme)}>{children}</div>;
 }
 
-const container = (theme: any) => css`
+const container = (theme: CustomTheme) => css`
   display: flex;
   flex-direction: column;
   gap: 1rem;

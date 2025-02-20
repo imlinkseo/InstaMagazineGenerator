@@ -1,50 +1,68 @@
 /** @jsxImportSource @emotion/react */
-import { css } from "@emotion/react";
-import { ReactComponent as Generate } from "@svgs/generate.svg";
-import { ReactComponent as Instagram } from "@svgs/instagram.svg";
+import { CustomTheme } from "src/theme";
+import { css, useTheme } from "@emotion/react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { LogoTextOver680, LogoTextUnder680 } from "@components/ui/text/Text";
+import { ButtonRound } from "@components/ui/button/Button";
+import { ReactComponent as Go } from "@svgs/go.svg";
 
 export default function Header() {
+  const theme = useTheme() as CustomTheme;
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const home_ = "home";
+  const home_url_ = "/";
+
+  const generate_ = "generate";
+  const generate_url_ = "/generate";
   return (
-    <header css={header}>
-      <Generate css={icon} />
-      {/* <h1 css={title}>MagazineGenerator</h1> */}
-      <div css={title_desc_container}>{/* <Instagram /> */}</div>
+    <header css={header(theme)}>
+      <LogoTextOver680 text="insta magazine generator" />
+      <LogoTextUnder680 text="img" />
+      <nav>
+        <ul css={nav(theme)}>
+          <li>
+            <Link to={home_url_}>
+              <ButtonRound
+                text={home_}
+                icon={<Go />}
+                isAvailable={location.pathname === home_url_}
+                onClick={() => navigate(home_url_)}
+              />
+            </Link>
+          </li>
+          <li>
+            <Link to={generate_url_}>
+              <ButtonRound
+                text={generate_}
+                icon={<Go />}
+                isAvailable={location.pathname === generate_url_}
+                onClick={() => navigate(generate_url_)}
+              />
+            </Link>
+          </li>
+        </ul>
+      </nav>
     </header>
   );
 }
 
-const header = (theme: any) => css`
+const header = (theme: CustomTheme) => css`
   display: flex;
   align-items: center;
   justify-content: space-between;
 
-  padding: ${theme.padding.md} ${theme.padding.lg};
-  border-radius: ${theme.borderRadius.xl};
+  padding: ${theme.padding.xs} ${theme.padding.sm} ${theme.padding.xs}
+    ${theme.padding.lg};
   background-color: ${theme.colors.wh};
 `;
 
-const title_desc_container = (theme: any) => css`
-  svg {
-    width: 1.5rem;
-    height: 1.5rem;
-    * {
-      fill: ${theme.colors.wh};
-    }
+const nav = (theme: CustomTheme) => css`
+  display: flex;
+  gap: 1rem;
+
+  @media (${theme.mediaQuery.ml}) {
+    gap: 0.5rem;
   }
-`;
-
-const title = (theme: any) => css`
-  color: ${theme.colors.bt};
-  font-size: ${theme.fontSize.lg};
-  font-weight: ${theme.fontWeight.bold};
-
-  @media (${theme.mediaQuery.md}) {
-    font-size: ${theme.fontSize.md};
-  }
-`;
-
-const icon = (theme: any) => css`
-  width: 32px;
-  height: 32px;
-  margin-bottom: 4px;
 `;
