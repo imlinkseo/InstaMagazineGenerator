@@ -1,6 +1,3 @@
-import { Tcontent } from "@components/feature/generator/Generator";
-import { TTemplate } from "@components/feature/template/Template";
-
 export const useIsDone = () => {
   const handleIsContentDone = (template: TTemplate, content: Tcontent) => {
     switch (template) {
@@ -23,10 +20,18 @@ export const useIsDone = () => {
   ) => {
     if (template) {
       const isContentDone = handleIsContentDone(template, content);
-      if (isContentDone && template && logo && image) {
-        return true;
+      if (template === "content") {
+        if (isContentDone && image) {
+          return true;
+        } else {
+          return false;
+        }
       } else {
-        return false;
+        if (isContentDone && template && logo && image) {
+          return true;
+        } else {
+          return false;
+        }
       }
     } else {
       return false;

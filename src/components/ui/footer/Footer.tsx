@@ -26,6 +26,7 @@ const footer = (theme: CustomTheme) => css`
   right: 0;
   max-width: ${theme.maxWidth};
   margin: 0 auto;
+  height: auto;
 
   display: flex;
   justify-content: space-between;

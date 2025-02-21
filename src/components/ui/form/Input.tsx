@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { CustomTheme } from "src/theme";
 import { css, useTheme } from "@emotion/react";
-import { forwardRef } from "react";
+import { forwardRef, useRef } from "react";
 
 interface IInputText {
   name: string;
@@ -20,11 +20,11 @@ export function InputText(prop: IInputText) {
   `;
 
   const text_input = (theme: CustomTheme) => css`
-    padding: ${theme.padding.md};
+    padding: ${theme.padding.xs} ${theme.padding.sm};
 
-    border: none;
-    border-radius: ${theme.borderRadius.lg};
-    background-color: ${theme.colors.b2};
+    outline: none;
+    outline-color: transparent;
+    border: 1px solid ${theme.colors.bt};
 
     font-size: ${theme.fontSize.md};
     font-family: "Pretendard", sans-serif;
@@ -33,6 +33,12 @@ export function InputText(prop: IInputText) {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+
+    &::focus {
+      outline: none;
+      outline-color: transparent;
+      border: 1px solid ${theme.colors.bt};
+    }
 
     &::placeholder {
       font-family: "Lexend", serif;
@@ -69,17 +75,31 @@ interface IInputTextArea {
 export function InputTextArea(prop: IInputTextArea) {
   const { name, id, placeholder, value, onChange } = prop;
   const theme = useTheme() as CustomTheme;
+  const windowHeight = window.innerHeight;
+  const minHeight = 80;
+  const maxHeight = windowHeight - 400;
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const handleHeightChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    onChange(e);
+
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+      const scrollHeight = textareaRef.current.scrollHeight;
+      textareaRef.current.style.height = `${scrollHeight}px`;
+    }
+  };
 
   const display_none = css`
     display: none;
   `;
 
   const text_input = (theme: CustomTheme) => css`
-    padding: ${theme.padding.md};
+    padding: ${theme.padding.xs} ${theme.padding.sm};
 
-    border: none;
-    border-radius: ${theme.borderRadius.lg};
-    background-color: ${theme.colors.b2};
+    outline: none;
+    outline-color: transparent;
+    border: 1px solid ${theme.colors.bt};
 
     font-size: ${theme.fontSize.md};
     font-family: "Pretendard", sans-serif;
@@ -88,6 +108,14 @@ export function InputTextArea(prop: IInputTextArea) {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    max-height: ${maxHeight}px;
+    min-height: ${minHeight}px;
+
+    &::focus {
+      outline: none;
+      outline-color: transparent;
+      border: 1px solid ${theme.colors.bt};
+    }
 
     &::placeholder {
       font-family: "Lexend", serif;
@@ -106,7 +134,8 @@ export function InputTextArea(prop: IInputTextArea) {
         css={text_input(theme)}
         placeholder={placeholder}
         value={value}
-        onChange={onChange}
+        onChange={handleHeightChange}
+        ref={textareaRef}
       />
     </div>
   );

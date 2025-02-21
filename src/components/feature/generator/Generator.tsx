@@ -5,16 +5,10 @@ import { RefObject, SetStateAction } from "react";
 import { InfoText } from "@components/ui/text/Text";
 import { ConfirmModal } from "@components/ui/modal/Modal";
 import { ButtonRound } from "@components/ui/button/Button";
-import { TTemplate } from "@components/feature/template/Template";
 import { useIsDone } from "@hooks/useIsDone";
-import { InputText, InputTextArea, InputFile } from "@components/ui/form/Input";
+import { InputTextArea, InputFile } from "@components/ui/form/Input";
 import { ReactComponent as Plus } from "@svgs/plus.svg";
 import { ReactComponent as Minus } from "@svgs/minus.svg";
-
-export type Tcontent = {
-  title: string | null;
-  desc: string | null;
-};
 
 interface IForm {
   template: TTemplate;
@@ -31,7 +25,7 @@ interface IForm {
   content: Tcontent;
   isModalOpen: boolean;
   setIsModalOpen: React.Dispatch<SetStateAction<boolean>>;
-  handleTitleChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleTitleChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   handleDescChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   handleCancelContent: () => void;
   handleSaveContent: () => void;
@@ -96,20 +90,24 @@ export function Generator(prop: IForm) {
           handleIsContentDone(template, content)
         }
       />
-      <ButtonRound
-        text={logo_}
-        icon={logo ? <Minus /> : <Plus />}
-        isAvailable={logo !== null}
-        onClick={logo ? handleLogoDelete : handleLogoClick}
-      />
-      <InputFile
-        name={logo_}
-        id={logo_}
-        accept={accept_}
-        ref={logoRef}
-        onChange={handleLogoChange}
-      />
 
+      {template !== "content" && (
+        <>
+          <ButtonRound
+            text={logo_}
+            icon={logo ? <Minus /> : <Plus />}
+            isAvailable={logo !== null}
+            onClick={logo ? handleLogoDelete : handleLogoClick}
+          />
+          <InputFile
+            name={logo_}
+            id={logo_}
+            accept={accept_}
+            ref={logoRef}
+            onChange={handleLogoChange}
+          />
+        </>
+      )}
       <ButtonRound
         text={image_}
         icon={image ? <Minus /> : <Plus />}
@@ -140,7 +138,7 @@ export function Generator(prop: IForm) {
         onCancel={handleCancelContent}
       >
         {template === "front" && handleTitleChange && (
-          <InputText
+          <InputTextArea
             name={title_}
             id={title_}
             placeholder={title_placeholder}
@@ -150,7 +148,7 @@ export function Generator(prop: IForm) {
         )}
         {template === "content" && handleTitleChange && handleDescChange && (
           <>
-            <InputText
+            <InputTextArea
               name={title_}
               id={title_}
               placeholder={title_placeholder}

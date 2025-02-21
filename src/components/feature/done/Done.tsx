@@ -21,6 +21,15 @@ export function Done(prop: IDone) {
   const theme = useTheme() as CustomTheme;
 
   const container = css`
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+
+    max-width: ${theme.maxWidth};
+    margin: 0 auto;
+
     display: flex;
     align-items: center;
     gap: 1rem;

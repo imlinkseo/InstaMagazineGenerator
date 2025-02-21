@@ -15,14 +15,14 @@ export default function Header() {
   const home_url_ = "/";
 
   const generate_ = "generate";
-  const generate_url_ = "/generate";
+  const generate_url_ = "/";
   return (
     <header css={header(theme)}>
       <LogoTextOver680 text="insta magazine generator" />
       <LogoTextUnder680 text="img" />
       <nav>
         <ul css={nav(theme)}>
-          <li>
+          {/* <li>
             <Link to={home_url_}>
               <ButtonRound
                 text={home_}
@@ -31,7 +31,7 @@ export default function Header() {
                 onClick={() => navigate(home_url_)}
               />
             </Link>
-          </li>
+          </li> */}
           <li>
             <Link to={generate_url_}>
               <ButtonRound
@@ -49,9 +49,18 @@ export default function Header() {
 }
 
 const header = (theme: CustomTheme) => css`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+
   display: flex;
   align-items: center;
   justify-content: space-between;
+  height: auto;
+  max-width: ${theme.maxWidth};
+  margin: 0 auto;
 
   padding: ${theme.padding.xs} ${theme.padding.sm};
   background-color: ${theme.colors.wh};

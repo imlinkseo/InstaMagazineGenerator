@@ -2,6 +2,7 @@
 import { CustomTheme } from "src/theme";
 import { css, useTheme } from "@emotion/react";
 import { SetStateAction } from "react";
+import { ButtonText } from "@components/ui/text/Text";
 
 interface IModal {
   children?: React.ReactNode;
@@ -44,10 +45,10 @@ export function Modal(prop: IModal) {
     flex-direction: column;
     gap: 1rem;
 
-    max-width: calc(720px - 100px);
+    max-width: calc(720px - 50px);
     min-width: 200px;
-    width: calc(100% - 100px);
-    border-radius: ${theme.borderRadius.lg};
+    width: calc(100% - 50px);
+    border: 1px solid ${theme.colors.bt};
     padding: ${theme.padding.md};
 
     position: fixed;
@@ -104,10 +105,6 @@ export function ConfirmModal(prop: ConfirmModal) {
     border-radius: ${theme.borderRadius.xl};
 
     transition: 0.3s ease-in-out;
-
-    font-size: ${theme.fontSize.ml};
-    font-family: "Lexend", serif;
-    text-transform: uppercase;
   `;
 
   const modal_button_bg_cancel = (theme: CustomTheme) => css`
@@ -127,13 +124,13 @@ export function ConfirmModal(prop: ConfirmModal) {
           css={[modal_button(theme), modal_button_bg_cancel(theme)]}
           onClick={onCancel}
         >
-          {cancelText}
+          <ButtonText text={cancelText} />
         </button>
         <button
           css={[modal_button(theme), modal_button_bg_confirm(theme)]}
           onClick={onConfirm}
         >
-          {confirmText}
+          <ButtonText text={confirmText} />
         </button>
       </div>
     </Modal>

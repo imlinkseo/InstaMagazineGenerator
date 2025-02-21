@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { CustomTheme } from "src/theme";
 import { css, useTheme } from "@emotion/react";
-import { SetStateAction, useState } from "react";
+import { SetStateAction } from "react";
 import { ButtonSquare } from "@components/ui/button/Button";
 import { InfoText } from "@components/ui/text/Text";
 
@@ -9,8 +9,6 @@ const info_ = "choose";
 export const front_cover_ = "front";
 export const content_default_ = "content";
 export const back_cover_ = "back";
-
-export type TTemplate = "front" | "content" | "back" | null;
 
 interface ITemplate {
   template: TTemplate;

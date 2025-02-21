@@ -2,13 +2,17 @@
 import { CustomTheme } from "src/theme";
 import { css, useTheme } from "@emotion/react";
 import { useState, useRef, useEffect } from "react";
+import domtoimage from "dom-to-image";
 import html2canvas from "html2canvas";
-import { Tcontent } from "@components/feature/generator/Generator";
-import { Template, TTemplate } from "@components/feature/template/Template";
+
+import { Template } from "@components/feature/template/Template";
 import { Generator } from "@components/feature/generator/Generator";
 import { Preview } from "@components/feature/preview/Preview";
 import { Done } from "@components/feature/done/Done";
 import { useIsDone } from "@hooks/useIsDone";
+import { Modal } from "@components/ui/modal/Modal";
+
+import { ReactComponent as Replace } from "@svgs/image.svg";
 
 export default function GeneratePage() {
   const [template, setTemplate] = useState<TTemplate>(null);
@@ -19,11 +23,13 @@ export default function GeneratePage() {
   const imageRef = useRef<HTMLInputElement>(null);
   const logoRef = useRef<HTMLInputElement>(null);
   const captureRef = useRef<HTMLDivElement>(null);
+  const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
+  const downloadModalRef = useRef<HTMLDivElement>(null);
+  const [capturedImage, setCapturedImage] = useState<string | null>(null);
 
   const { handleIsAllDone } = useIsDone();
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log("handleImageChange");
     const file = e.target.files?.[0];
     if (file) {
       const imageUrl = URL.createObjectURL(file);
@@ -61,7 +67,7 @@ export default function GeneratePage() {
     logoRef.current?.click();
   };
 
-  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleTitleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setContent((prev: Tcontent) => ({
       ...prev,
       title: e.target.value,
@@ -84,14 +90,33 @@ export default function GeneratePage() {
     setIsModalOpen(false);
   };
 
-  const handleCapture = async () => {
+  const prepareForCapture = () => {
     if (captureRef.current) {
-      const canvas = await html2canvas(captureRef.current);
-      const imgData = canvas.toDataURL("image/png");
-      const link = document.createElement("a");
-      link.href = imgData;
-      link.download = "img-generated";
-      link.click();
+      captureRef.current.style.transform = "none";
+      captureRef.current.style.filter = "none";
+      captureRef.current.style.opacity = "1";
+    }
+  };
+
+  const handleCapture = async () => {
+    prepareForCapture();
+
+    if (captureRef.current) {
+      const imgData = await domtoimage.toPng(captureRef.current);
+
+      const isMobile = /iPhone|iPad|Android/i.test(navigator.userAgent);
+
+      if (isMobile) {
+        setIsDownloadModalOpen(true);
+        setCapturedImage(imgData);
+      } else {
+        const link = document.createElement("a");
+        link.href = imgData;
+        link.download = "captured-image.png";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
     }
   };
 
@@ -105,7 +130,11 @@ export default function GeneratePage() {
   const container = (theme: CustomTheme) => css`
     display: flex;
     flex-direction: column;
-    border-bottom: 1px solid ${theme.colors.bt};
+  `;
+
+  const captured_image = css`
+    width: 100%;
+    max-width: 720px;
   `;
 
   return (
@@ -145,6 +174,13 @@ export default function GeneratePage() {
           )}
         </>
       )}
+      <Modal isOpen={isDownloadModalOpen} setIsOpen={setIsDownloadModalOpen}>
+        <div ref={downloadModalRef}>
+          {capturedImage && (
+            <img src={capturedImage} alt="Captured" css={captured_image} />
+          )}
+        </div>
+      </Modal>
     </div>
   );
 }
