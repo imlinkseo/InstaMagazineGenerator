@@ -39,6 +39,8 @@ export default function GeneratePage() {
     },
     back: { desc: null },
   };
+  const isMobile = /iPhone|iPad|Android/i.test(navigator.userAgent);
+  const isAndroid = /Android/i.test(navigator.userAgent);
 
   const { handleIsAllDone } = useIsDone();
 
@@ -227,26 +229,34 @@ export default function GeneratePage() {
     forceRedraw(captureRef.current);
 
     let { width, height } = captureRef.current.getBoundingClientRect();
-    width = Math.round(width);
+    width = Math.round(Math.min(width, window.innerWidth));
     height = Math.round(height);
-    const scale = window.devicePixelRatio || 1;
-    (captureRef.current as HTMLDivElement).style.margin = "0";
-    (captureRef.current as HTMLDivElement).style.padding = "0";
-    (captureRef.current as HTMLDivElement).style.overflow = "hidden";
-    (captureRef.current as HTMLDivElement).style.backgroundColor =
-      "transparent";
+    const scale = Math.floor(window.devicePixelRatio) || 1;
 
     await waitForImages(captureRef.current);
+
+    // (captureRef.current as HTMLDivElement).style.margin = "0";
+    // (captureRef.current as HTMLDivElement).style.padding = "0";
+    // (captureRef.current as HTMLDivElement).style.overflow = "hidden";
+    // (captureRef.current as HTMLDivElement).style.backgroundColor =
+    //   "transparent";
 
     setTimeout(async () => {
       const canvas = await html2canvas(captureRef.current as HTMLDivElement, {
         scale: scale,
         useCORS: true,
-        backgroundColor: null,
+        backgroundColor: "transparent",
         width: width * scale,
         height: height * scale,
         foreignObjectRendering: false,
         removeContainer: true,
+      });
+
+      const imgElements = (
+        captureRef.current as HTMLDivElement
+      ).querySelectorAll("img");
+      imgElements.forEach((img) => {
+        img.setAttribute("crossOrigin", "anonymous");
       });
 
       const croppedCanvas = document.createElement("canvas");
@@ -257,6 +267,18 @@ export default function GeneratePage() {
         .getContext("2d")
         ?.getImageData(0, 0, canvas.width, canvas.height);
       if (!imgData) return;
+      let rightTrim = canvas.width;
+      for (let x = canvas.width - 1; x >= 0; x--) {
+        for (let y = 0; y < canvas.height; y++) {
+          const index = (y * canvas.width + x) * 4;
+          const alpha = imgData.data[index + 3];
+          if (alpha > 0) {
+            rightTrim = x + 1;
+            break;
+          }
+        }
+        if (rightTrim !== canvas.width) break;
+      }
       let bottomTrim = canvas.height;
       for (let y = canvas.height - 1; y >= 0; y--) {
         for (let x = 0; x < canvas.width; x++) {
@@ -270,28 +292,35 @@ export default function GeneratePage() {
         if (bottomTrim !== canvas.height) break;
       }
 
-      croppedCanvas.width = canvas.width;
+      croppedCanvas.width = rightTrim;
       croppedCanvas.height = bottomTrim;
       ctx.drawImage(
         canvas,
         0,
         0,
-        canvas.width,
+        rightTrim,
         bottomTrim,
         0,
         0,
-        canvas.width,
+        rightTrim,
         bottomTrim
       );
 
       const finalImage = croppedCanvas.toDataURL("image/png");
       setCapturedImage(finalImage);
 
-      const isMobile = /iPhone|iPad|Android/i.test(navigator.userAgent);
-
       if (isMobile) {
-        if (imgData) {
-          setCapturedImage(finalImage);
+        if (isAndroid) {
+          const newTab = window.open();
+          if (newTab) {
+            newTab.document.write(
+              `<img src="${finalImage}" style="width:100%; max-width: 720px;" />`
+            );
+          }
+        } else {
+          if (imgData) {
+            setCapturedImage(finalImage);
+          }
         }
       } else {
         const link = document.createElement("a");
@@ -313,7 +342,7 @@ export default function GeneratePage() {
   };
 
   useEffect(() => {
-    if (capturedImage) {
+    if (capturedImage && isMobile && !isAndroid) {
       setIsDownloadModalOpen(true);
     }
   }, [capturedImage]);
