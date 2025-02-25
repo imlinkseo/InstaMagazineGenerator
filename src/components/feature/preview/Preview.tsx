@@ -243,9 +243,9 @@ export const Preview = forwardRef<HTMLDivElement, IPreview>(
             crossOrigin="anonymous"
           />
         )}
-        <div css={water_mark_container(windowWidth)}>
+        {/* <div css={water_mark_container(windowWidth)}>
           <WaterMarkText text={water_mark_} windowWidth={windowWidth} />
-        </div>
+        </div> */}
         {
           <div css={[content_bg(theme), content_bg_full(template)]}>
             <div

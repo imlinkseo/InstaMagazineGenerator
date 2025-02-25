@@ -128,6 +128,7 @@ export function LocationText(prop: ILocationText) {
     line-height: 1.5em;
     color: ${theme.colors.wh};
     white-space: nowrap;
+    transform: translateY(0.125em);
 
     &:before {
       position: absolute;
@@ -139,13 +140,6 @@ export function LocationText(prop: ILocationText) {
       width: 1px;
       height: 50%;
       background-color: ${theme.colors.wh};
-    }
-
-    @media (${theme.mediaQuery.md}) {
-      font-size: ${theme.fontSize.ms};
-    }
-    @media (${theme.mediaQuery.sm}) {
-      font-size: ${theme.fontSize.sm};
     }
   `;
 
@@ -323,7 +317,7 @@ export function TitleText(prop: IPreviewText) {
         `;
       case "content":
         return css`
-          font-size: ${windowWidth / 24}px;
+          font-size: ${windowWidth / 18}px;
         `;
       case "back":
         return css`
@@ -365,7 +359,7 @@ export function DescText(prop: IPreviewText) {
         `;
       case "content":
         return css`
-          font-size: ${windowWidth / 30}px;
+          font-size: ${windowWidth / 24}px;
         `;
       case "back":
         return css`
