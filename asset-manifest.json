@@ -1,16 +1,16 @@
 {
   "files": {
     "main.css": "/InstaMagazineGenerator/static/css/main.61c0e92e.css",
-    "main.js": "/InstaMagazineGenerator/static/js/main.d26df66b.js",
+    "main.js": "/InstaMagazineGenerator/static/js/main.7d27de21.js",
     "index.html": "/InstaMagazineGenerator/index.html",
     "static/media/go.svg": "/InstaMagazineGenerator/static/media/go.9da9df3a52b2844d96df2525d7a7065d.svg",
     "static/media/plus.svg": "/InstaMagazineGenerator/static/media/plus.02d32f1a0a805169615ec924b3bd2e1c.svg",
     "static/media/minus.svg": "/InstaMagazineGenerator/static/media/minus.98935fa38e8a88fcc3c21051934dce4e.svg",
     "main.61c0e92e.css.map": "/InstaMagazineGenerator/static/css/main.61c0e92e.css.map",
-    "main.d26df66b.js.map": "/InstaMagazineGenerator/static/js/main.d26df66b.js.map"
+    "main.7d27de21.js.map": "/InstaMagazineGenerator/static/js/main.7d27de21.js.map"
   },
   "entrypoints": [
     "static/css/main.61c0e92e.css",
-    "static/js/main.d26df66b.js"
+    "static/js/main.7d27de21.js"
   ]
 }
