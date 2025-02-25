@@ -205,31 +205,97 @@ export default function GeneratePage() {
     element.style.display = "";
   };
 
+  const prepareForCapture = () => {
+    if (captureRef.current) {
+      captureRef.current.style.overflow = "hidden";
+      captureRef.current.style.position = "relative";
+    }
+  };
+
+  const resetAfterCapture = () => {
+    if (captureRef.current) {
+      captureRef.current.style.overflow = "";
+      captureRef.current.style.position = "";
+    }
+  };
+
   const handleCapture = async () => {
     if (!captureRef.current) return;
 
     setIsLoading(true);
+    prepareForCapture();
     forceRedraw(captureRef.current);
+
+    let { width, height } = captureRef.current.getBoundingClientRect();
+    width = Math.round(width);
+    height = Math.round(height);
+    const scale = window.devicePixelRatio || 1;
+    (captureRef.current as HTMLDivElement).style.margin = "0";
+    (captureRef.current as HTMLDivElement).style.padding = "0";
+    (captureRef.current as HTMLDivElement).style.overflow = "hidden";
+    (captureRef.current as HTMLDivElement).style.backgroundColor =
+      "transparent";
+
     await waitForImages(captureRef.current);
 
     setTimeout(async () => {
       const canvas = await html2canvas(captureRef.current as HTMLDivElement, {
-        scale: 1.5,
+        scale: scale,
         useCORS: true,
-        backgroundColor: "#fff",
+        backgroundColor: null,
+        width: width * scale,
+        height: height * scale,
         foreignObjectRendering: false,
+        removeContainer: true,
       });
 
-      const imgData = canvas.toDataURL("image/png");
+      const croppedCanvas = document.createElement("canvas");
+      const ctx = croppedCanvas.getContext("2d");
+      if (!ctx) return;
+
+      const imgData = canvas
+        .getContext("2d")
+        ?.getImageData(0, 0, canvas.width, canvas.height);
+      if (!imgData) return;
+      let bottomTrim = canvas.height;
+      for (let y = canvas.height - 1; y >= 0; y--) {
+        for (let x = 0; x < canvas.width; x++) {
+          const index = (y * canvas.width + x) * 4;
+          const alpha = imgData.data[index + 3];
+          if (alpha > 0) {
+            bottomTrim = y + 1;
+            break;
+          }
+        }
+        if (bottomTrim !== canvas.height) break;
+      }
+
+      croppedCanvas.width = canvas.width;
+      croppedCanvas.height = bottomTrim;
+      ctx.drawImage(
+        canvas,
+        0,
+        0,
+        canvas.width,
+        bottomTrim,
+        0,
+        0,
+        canvas.width,
+        bottomTrim
+      );
+
+      const finalImage = croppedCanvas.toDataURL("image/png");
+      setCapturedImage(finalImage);
+
       const isMobile = /iPhone|iPad|Android/i.test(navigator.userAgent);
 
       if (isMobile) {
         if (imgData) {
-          setCapturedImage(imgData);
+          setCapturedImage(finalImage);
         }
       } else {
         const link = document.createElement("a");
-        link.href = imgData;
+        link.href = finalImage;
         link.download = "captured-image.png";
         document.body.appendChild(link);
         link.click();
@@ -237,6 +303,7 @@ export default function GeneratePage() {
       }
 
       setIsLoading(false);
+      resetAfterCapture();
     }, 500);
   };
 

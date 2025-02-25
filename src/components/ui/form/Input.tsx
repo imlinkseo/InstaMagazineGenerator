@@ -25,6 +25,7 @@ export function InputText(prop: IInputText) {
     outline: none;
     outline-color: transparent;
     border: 1px solid ${theme.colors.bt};
+    border-radius: 0;
 
     font-size: ${theme.fontSize.md};
     font-family: "Pretendard", sans-serif;
@@ -100,6 +101,7 @@ export function InputTextArea(prop: IInputTextArea) {
     outline: none;
     outline-color: transparent;
     border: 1px solid ${theme.colors.bt};
+    border-radius: 0;
 
     font-size: ${theme.fontSize.md};
     font-family: "Pretendard", sans-serif;
