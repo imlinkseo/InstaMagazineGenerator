@@ -25,5 +25,6 @@ const container = (
   footerHeight: number
 ) => css`
   padding-top: ${headerHeight}px;
+  padding-bottom: ${footerHeight}px;
   width: 100%;
 `;

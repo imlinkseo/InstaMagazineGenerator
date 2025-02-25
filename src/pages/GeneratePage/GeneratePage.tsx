@@ -104,7 +104,7 @@ export default function GeneratePage() {
     });
   };
 
-  const handleLocationChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const handleLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setContent((prev) => {
       if (prev && "location" in prev) {
         return { ...prev, location: e.target.value };
@@ -113,7 +113,7 @@ export default function GeneratePage() {
     });
   };
 
-  const handleTagChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const handleTagChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setContent((prev) => {
       if (prev && "tag" in prev) {
         return { ...prev, tag: e.target.value };
@@ -122,14 +122,19 @@ export default function GeneratePage() {
     });
   };
 
-  const handleCancelContent = (template: TTemplate) => {
+  const handleCancelContent = (
+    template: TTemplate,
+    contentTemplate: TContentTemplate
+  ) => {
     setIsModalOpen(false);
     switch (template) {
       case "front":
         setContent(initialContent.front);
         break;
       case "content":
-        setContent(null);
+        setContent(
+          contentTemplate ? initialContent.content[contentTemplate] : null
+        );
         break;
       case "back":
         setContent(initialContent.back);
@@ -194,24 +199,41 @@ export default function GeneratePage() {
     });
   };
 
+  const forceRedraw = (element: HTMLElement) => {
+    element.style.display = "none";
+    void element.offsetHeight;
+    element.style.display = "";
+  };
+
   const handleCapture = async () => {
     if (!captureRef.current) return;
 
     setIsLoading(true);
-
+    forceRedraw(captureRef.current);
     await waitForImages(captureRef.current);
 
     setTimeout(async () => {
       const canvas = await html2canvas(captureRef.current as HTMLDivElement, {
-        scale: 2,
+        scale: 1.5,
         useCORS: true,
-        backgroundColor: null,
+        backgroundColor: "#fff",
+        foreignObjectRendering: false,
       });
 
       const imgData = canvas.toDataURL("image/png");
+      const isMobile = /iPhone|iPad|Android/i.test(navigator.userAgent);
 
-      if (imgData) {
-        setCapturedImage(imgData);
+      if (isMobile) {
+        if (imgData) {
+          setCapturedImage(imgData);
+        }
+      } else {
+        const link = document.createElement("a");
+        link.href = imgData;
+        link.download = "captured-image.png";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
       }
 
       setIsLoading(false);
@@ -232,20 +254,59 @@ export default function GeneratePage() {
   useEffect(() => {
     if (template) {
       handleImageDelete();
-      handleCancelContent(template);
+      handleCancelContent(template, contentTemplate);
     }
   }, [template]);
 
   function handleContentChange(contentTemplate: TContentTemplate) {
     switch (contentTemplate) {
       case "default":
-        setContent(initialContent.content.default);
+        setContent((prev) => {
+          return {
+            title:
+              prev && "title" in prev
+                ? prev.title
+                : initialContent.content.default.title,
+            desc:
+              prev && "desc" in prev
+                ? prev.desc
+                : initialContent.content.default.desc,
+          };
+        });
         break;
       case "location":
-        setContent(initialContent.content.location);
+        setContent((prev) => {
+          return {
+            title:
+              prev && "title" in prev
+                ? prev.title
+                : initialContent.content.location.title,
+            desc:
+              prev && "desc" in prev
+                ? prev.desc
+                : initialContent.content.location.desc,
+            location:
+              prev && "location" in prev
+                ? prev.location
+                : initialContent.content.location.location,
+          };
+        });
         break;
       case "tag":
-        setContent(initialContent.content.tag);
+        setContent((prev) => {
+          return {
+            title:
+              prev && "title" in prev
+                ? prev.title
+                : initialContent.content.tag.title,
+            desc:
+              prev && "desc" in prev
+                ? prev.desc
+                : initialContent.content.tag.desc,
+            tag:
+              prev && "tag" in prev ? prev.tag : initialContent.content.tag.tag,
+          };
+        });
         break;
       case null:
         setContent(null);
@@ -310,8 +371,10 @@ export default function GeneratePage() {
                 setIsModalOpen={setIsModalOpen}
                 handleTitleChange={handleTitleChange}
                 handleDescChange={handleDescChange}
+                handleLocationChange={handleLocationChange}
+                handleTagChange={handleTagChange}
                 handleCancelContent={() => {
-                  handleCancelContent(template);
+                  handleCancelContent(template, contentTemplate);
                 }}
                 handleSaveContent={handleSaveContent}
               />
@@ -348,8 +411,10 @@ export default function GeneratePage() {
                 setIsModalOpen={setIsModalOpen}
                 handleTitleChange={handleTitleChange}
                 handleDescChange={handleDescChange}
+                handleLocationChange={handleLocationChange}
+                handleTagChange={handleTagChange}
                 handleCancelContent={() => {
-                  handleCancelContent(template);
+                  handleCancelContent(template, contentTemplate);
                 }}
                 handleSaveContent={handleSaveContent}
               />

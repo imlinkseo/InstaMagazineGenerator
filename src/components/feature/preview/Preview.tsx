@@ -26,7 +26,7 @@ export const Preview = forwardRef<HTMLDivElement, IPreview>(
 
     useEffect(() => {
       const handleResize = () => {
-        setWindowWidth(window.innerWidth);
+        setWindowWidth(window.innerWidth > 720 ? 720 : window.innerWidth);
       };
 
       window.addEventListener("resize", handleResize);
@@ -36,15 +36,15 @@ export const Preview = forwardRef<HTMLDivElement, IPreview>(
 
     const water_mark_ = "imlinkseo";
     const replaceLogo = `/InstaMagazineGenerator/assets/logo.png?v=${new Date().getTime()}`;
-    const replaceImage = `/InstaMagazineGenerator/assets/bg.png?v=${new Date().getTime()}`;
 
     const replaceTitle = "title";
     const replaceDesc = "description";
     const replaceLocation = "location";
+    const replaceTag = "tag";
 
     const preview_container_with_image = (
       theme: CustomTheme,
-      image: string
+      image: string | null
     ) => css`
       display: flex;
       flex-direction: column;
@@ -64,9 +64,9 @@ export const Preview = forwardRef<HTMLDivElement, IPreview>(
       overflow: hidden;
 
       background-image: url(${image});
-      background-color: ${theme.colors.bg};
+      background-color: ${theme.colors.bl};
       background-size: cover;
-      background-repeat: no-repeat;
+      background-repeat: ${image ? "no-repeat" : "repeat"};
       background-position: center;
     `;
 
@@ -220,13 +220,17 @@ export const Preview = forwardRef<HTMLDivElement, IPreview>(
       z-index: 1;
     `;
 
+    const title_container = (theme: CustomTheme) => css`
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    `;
+
     const theme = useTheme() as CustomTheme;
 
     return (
-      <div
-        css={preview_container_with_image(theme, image ?? replaceImage)}
-        ref={ref}
-      >
+      <div css={preview_container_with_image(theme, image)} ref={ref}>
         {template !== "content" && (
           <img
             src={logo ?? replaceLogo}
@@ -252,28 +256,30 @@ export const Preview = forwardRef<HTMLDivElement, IPreview>(
                 content_container_padding(theme, template, windowWidth),
               ]}
             >
-              {content && "title" in content && (
-                <TitleText
-                  text={content.title}
-                  replace={replaceTitle}
-                  template={template}
-                  windowWidth={windowWidth}
-                />
-              )}
-              {content && "location" in content && (
-                <LocationText
-                  text={content.location}
-                  replace={replaceLocation}
-                  windowWidth={windowWidth}
-                />
-              )}
-              {content && "tag" in content && (
-                <TagText
-                  text={content.tag}
-                  replace={replaceLocation}
-                  windowWidth={windowWidth}
-                />
-              )}
+              <div css={title_container(theme)}>
+                {content && "title" in content && (
+                  <TitleText
+                    text={content.title}
+                    replace={replaceTitle}
+                    template={template}
+                    windowWidth={windowWidth}
+                  />
+                )}
+                {content && "location" in content && (
+                  <LocationText
+                    text={content.location}
+                    replace={replaceLocation}
+                    windowWidth={windowWidth}
+                  />
+                )}
+                {content && "tag" in content && (
+                  <TagText
+                    text={content.tag}
+                    replace={replaceTag}
+                    windowWidth={windowWidth}
+                  />
+                )}
+              </div>
               {content && "desc" in content && (
                 <DescText
                   text={content.desc}

@@ -48,6 +48,48 @@ export function LogoTextUnder680(prop: IText) {
   return <p css={logo_text(theme)}>{prop.text}</p>;
 }
 
+export function GreetingText(prop: IText) {
+  const theme = useTheme() as CustomTheme;
+  const greeting_text = (theme: CustomTheme) => css`
+    display: block;
+    text-transform: uppercase;
+    font-family: "Lexend", serif;
+    font-size: ${theme.fontSize.lg};
+    text-align: center;
+    font-weight: ${theme.fontWeight.black};
+
+    @media (${theme.mediaQuery.ml}) {
+      font-size: ${theme.fontSize.ml};
+    }
+    @media (${theme.mediaQuery.ms}) {
+      font-size: ${theme.fontSize.md};
+    }
+  `;
+
+  return <p css={greeting_text(theme)}>{prop.text}</p>;
+}
+
+interface IHowtoText {
+  text: string;
+  windowWidth: number;
+}
+
+export function HowtoText(prop: IHowtoText) {
+  const { text, windowWidth } = prop;
+  const theme = useTheme() as CustomTheme;
+
+  const howto_style = (theme: CustomTheme) => css`
+    color: ${theme.colors.bl};
+    font-weight: ${theme.fontWeight.normal};
+    text-align: center;
+    line-height: 1.5em;
+    white-space: pre-wrap;
+    font-size: ${windowWidth / 30}px;
+  `;
+
+  return <p css={[howto_style(theme)]}>{text}</p>;
+}
+
 export function ButtonText(prop: IText) {
   const theme = useTheme() as CustomTheme;
   const button_text = (theme: CustomTheme) => css`
@@ -80,10 +122,24 @@ export function LocationText(prop: ILocationText) {
   const theme = useTheme() as CustomTheme;
 
   const location_text = (theme: CustomTheme, windowWidth: number) => css`
+    position: relative;
+    padding-left: 1em;
     font-size: ${windowWidth / 30}px;
-    line-height: 1em;
+    line-height: 1.5em;
     color: ${theme.colors.wh};
     white-space: nowrap;
+
+    &:before {
+      position: absolute;
+      content: "";
+      left: 0.5em;
+      top: 50%;
+      transform: translate(-0.25em, -50%);
+      display: block;
+      width: 1px;
+      height: 50%;
+      background-color: ${theme.colors.wh};
+    }
 
     @media (${theme.mediaQuery.md}) {
       font-size: ${theme.fontSize.ms};
@@ -108,9 +164,11 @@ export function TagText(prop: ITagText) {
 
   const tag_text = (theme: CustomTheme, windowWidth: number) => css`
     font-size: ${windowWidth / 30}px;
-    line-height: 1em;
-    color: ${theme.colors.wh};
+    color: ${theme.colors.bl};
     white-space: nowrap;
+    padding: ${windowWidth / 92}px ${windowWidth / 46}px;
+    background-color: ${theme.colors.wh};
+    border-radius: ${windowWidth / 24}px;
 
     @media (${theme.mediaQuery.md}) {
       font-size: ${theme.fontSize.ms};
@@ -120,7 +178,7 @@ export function TagText(prop: ITagText) {
     }
   `;
 
-  return <p css={tag_text(theme, windowWidth)}>{text ?? replace}</p>;
+  return <p css={tag_text(theme, windowWidth)}># {text ?? replace}</p>;
 }
 
 export function CaptionText(prop: IText) {
@@ -249,7 +307,6 @@ export function TitleText(prop: IPreviewText) {
   };
 
   const title_style = (theme: CustomTheme) => css`
-    width: 100%;
     text-overflow: ellipsis;
     white-space: pre-wrap;
     line-height: 1.5em;

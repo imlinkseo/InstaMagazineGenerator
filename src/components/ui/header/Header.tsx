@@ -11,14 +11,27 @@ export default function Header() {
   const location = useLocation();
   const navigate = useNavigate();
 
+  const home = "home";
+  const home_url_ = "/";
   const generate_ = "generate";
-  const generate_url_ = "/";
+  const generate_url_ = "/generate";
+
   return (
     <header css={header(theme)}>
       <LogoTextOver680 text="insta magazine generator" />
       <LogoTextUnder680 text="img" />
-      {/* <nav>
+      <nav>
         <ul css={nav(theme)}>
+          <li>
+            <Link to={home_url_}>
+              <ButtonRound
+                text={home}
+                icon={<Go />}
+                isAvailable={location.pathname === home_url_}
+                onClick={() => navigate(home_url_)}
+              />
+            </Link>
+          </li>
           <li>
             <Link to={generate_url_}>
               <ButtonRound
@@ -30,7 +43,7 @@ export default function Header() {
             </Link>
           </li>
         </ul>
-      </nav> */}
+      </nav>
     </header>
   );
 }

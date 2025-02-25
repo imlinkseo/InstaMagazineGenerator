@@ -6,7 +6,7 @@ import { InfoText } from "@components/ui/text/Text";
 import { ConfirmModal } from "@components/ui/modal/Modal";
 import { ButtonRound } from "@components/ui/button/Button";
 import { useIsDone } from "@hooks/useIsDone";
-import { InputTextArea, InputFile } from "@components/ui/form/Input";
+import { InputTextArea, InputFile, InputText } from "@components/ui/form/Input";
 import { ReactComponent as Plus } from "@svgs/plus.svg";
 import { ReactComponent as Minus } from "@svgs/minus.svg";
 
@@ -28,6 +28,8 @@ interface IForm {
   setIsModalOpen: React.Dispatch<SetStateAction<boolean>>;
   handleTitleChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   handleDescChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  handleLocationChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleTagChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleCancelContent: () => void;
   handleSaveContent: () => void;
 }
@@ -51,6 +53,8 @@ export function Generator(prop: IForm) {
     setIsModalOpen,
     handleTitleChange,
     handleDescChange,
+    handleLocationChange,
+    handleTagChange,
     handleCancelContent,
     handleSaveContent,
   } = prop;
@@ -62,47 +66,127 @@ export function Generator(prop: IForm) {
   const title_placeholder = "fill title!";
   const desc_ = "desc";
   const desc_placeholder = "fill description!";
+  const location_ = "location";
+  const location_placeholder = "fill location!";
+  const tag_ = "tag";
+  const tag_placeholder = "fill tag!";
   const accept_ = `image/*`;
   const confirm_ = "save";
   const cancel = "delete";
   const info_ = "fill";
 
   const renderContentTemplate = (contentTemplate: TContentTemplate) => {
-    if (
-      template !== "content" ||
-      contentTemplate === null ||
-      handleTitleChange === undefined ||
-      handleDescChange === undefined
-    )
-      return null;
+    if (template !== "content" || contentTemplate === null) return null;
 
     const templateComponents: Record<string, JSX.Element> = {
       default: (
         <>
-          <InputTextArea
-            name={title_}
-            id={title_}
-            placeholder={title_placeholder}
-            value={
-              content && "title" in content && content.title
-                ? content.title
-                : ""
-            }
-            onChange={handleTitleChange}
-          />
-          <InputTextArea
-            name={desc_}
-            id={desc_}
-            placeholder={desc_placeholder}
-            value={
-              content && "desc" in content && content.desc ? content.desc : ""
-            }
-            onChange={handleDescChange}
-          />
+          {handleTitleChange && (
+            <InputTextArea
+              name={title_}
+              id={title_}
+              placeholder={title_placeholder}
+              value={
+                content && "title" in content && content.title
+                  ? content.title
+                  : ""
+              }
+              onChange={handleTitleChange}
+            />
+          )}
+          {handleDescChange && (
+            <InputTextArea
+              name={desc_}
+              id={desc_}
+              placeholder={desc_placeholder}
+              value={
+                content && "desc" in content && content.desc ? content.desc : ""
+              }
+              onChange={handleDescChange}
+            />
+          )}
         </>
       ),
-      location: <></>,
-      tag: <></>,
+      location: (
+        <>
+          {handleTitleChange && (
+            <InputTextArea
+              name={title_}
+              id={title_}
+              placeholder={title_placeholder}
+              value={
+                content && "title" in content && content.title
+                  ? content.title
+                  : ""
+              }
+              onChange={handleTitleChange}
+            />
+          )}
+          {handleLocationChange && (
+            <InputText
+              name={location_}
+              id={location_}
+              placeholder={location_placeholder}
+              value={
+                content && "location" in content && content.location
+                  ? content.location
+                  : ""
+              }
+              onChange={handleLocationChange}
+            />
+          )}
+          {handleDescChange && (
+            <InputTextArea
+              name={desc_}
+              id={desc_}
+              placeholder={desc_placeholder}
+              value={
+                content && "desc" in content && content.desc ? content.desc : ""
+              }
+              onChange={handleDescChange}
+            />
+          )}
+        </>
+      ),
+      tag: (
+        <>
+          {handleTitleChange && (
+            <InputTextArea
+              name={title_}
+              id={title_}
+              placeholder={title_placeholder}
+              value={
+                content && "title" in content && content.title
+                  ? content.title
+                  : ""
+              }
+              onChange={handleTitleChange}
+            />
+          )}
+          {handleTagChange && (
+            <InputText
+              name={tag_}
+              id={tag_}
+              placeholder={tag_placeholder}
+              value={
+                content && "tag" in content && content.tag ? content.tag : ""
+              }
+              onChange={handleTagChange}
+            />
+          )}
+          {handleDescChange && (
+            <InputTextArea
+              name={desc_}
+              id={desc_}
+              placeholder={desc_placeholder}
+              value={
+                content && "desc" in content && content.desc ? content.desc : ""
+              }
+              onChange={handleDescChange}
+            />
+          )}
+        </>
+      ),
     };
 
     return templateComponents[contentTemplate] || null;
