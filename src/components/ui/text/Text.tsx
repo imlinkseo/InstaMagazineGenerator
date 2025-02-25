@@ -47,6 +47,7 @@ export function LogoTextUnder680(prop: IText) {
 
   return <p css={logo_text(theme)}>{prop.text}</p>;
 }
+
 export function ButtonText(prop: IText) {
   const theme = useTheme() as CustomTheme;
   const button_text = (theme: CustomTheme) => css`
@@ -66,6 +67,60 @@ export function ButtonText(prop: IText) {
   `;
 
   return <p css={button_text(theme)}>{prop.text}</p>;
+}
+
+interface ILocationText {
+  text: string | null;
+  windowWidth: number;
+  replace: string;
+}
+
+export function LocationText(prop: ILocationText) {
+  const { text, windowWidth, replace } = prop;
+  const theme = useTheme() as CustomTheme;
+
+  const location_text = (theme: CustomTheme, windowWidth: number) => css`
+    font-size: ${windowWidth / 30}px;
+    line-height: 1em;
+    color: ${theme.colors.wh};
+    white-space: nowrap;
+
+    @media (${theme.mediaQuery.md}) {
+      font-size: ${theme.fontSize.ms};
+    }
+    @media (${theme.mediaQuery.sm}) {
+      font-size: ${theme.fontSize.sm};
+    }
+  `;
+
+  return <p css={location_text(theme, windowWidth)}>{text ?? replace}</p>;
+}
+
+interface ITagText {
+  text: string | null;
+  windowWidth: number;
+  replace: string;
+}
+
+export function TagText(prop: ITagText) {
+  const { text, windowWidth, replace } = prop;
+  const theme = useTheme() as CustomTheme;
+
+  const tag_text = (theme: CustomTheme, windowWidth: number) => css`
+    font-size: ${windowWidth / 30}px;
+    line-height: 1em;
+    color: ${theme.colors.wh};
+    white-space: nowrap;
+
+    @media (${theme.mediaQuery.md}) {
+      font-size: ${theme.fontSize.ms};
+    }
+    @media (${theme.mediaQuery.sm}) {
+      font-size: ${theme.fontSize.sm};
+    }
+  `;
+
+  return <p css={tag_text(theme, windowWidth)}>{text ?? replace}</p>;
 }
 
 export function CaptionText(prop: IText) {

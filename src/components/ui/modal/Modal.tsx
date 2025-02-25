@@ -8,10 +8,11 @@ interface IModal {
   children?: React.ReactNode;
   isOpen: boolean;
   setIsOpen: React.Dispatch<SetStateAction<boolean>>;
+  handleCloseModal?: () => void;
 }
 
 export function Modal(prop: IModal) {
-  const { children, isOpen, setIsOpen } = prop;
+  const { children, isOpen, setIsOpen, handleCloseModal } = prop;
 
   const handleModalOpen = () => {
     setIsOpen(!isOpen);
@@ -37,7 +38,7 @@ export function Modal(prop: IModal) {
     margin: 0 auto;
     max-width: ${theme.maxWidth};
 
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: rgba(0, 0, 0, 0.6);
   `;
 
   const modal = (theme: CustomTheme, isOpen: boolean) => css`
@@ -61,7 +62,10 @@ export function Modal(prop: IModal) {
   `;
 
   return (
-    <div css={modal_bg(theme, isOpen)} onClick={handleModalOpen}>
+    <div
+      css={modal_bg(theme, isOpen)}
+      onClick={handleCloseModal ?? handleModalOpen}
+    >
       <div css={modal(theme, isOpen)} onClick={handleStepPropagation}>
         {children}
       </div>

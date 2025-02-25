@@ -1,7 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import { HeaderFooterProvider } from "@components/ui/headerFooterProvider/HeaderFooterProvider";
 import GeneratePage from "@pages/GeneratePage/GeneratePage";
-import MainPage from "@pages/MainPage/MainPage";
 import Header from "@components/ui/header/Header";
 import Footer from "@components/ui/footer/Footer";
 import ResponsiveContainer from "@components/ui/container/ResponsiveContainer";
@@ -15,7 +14,6 @@ export default function DefaultLayout() {
         <ResponsiveInnerContainer>
           <Routes>
             <Route path="/" element={<GeneratePage />} />
-            {/* <Route path="/generate" element={<GeneratePage />} /> */}
           </Routes>
         </ResponsiveInnerContainer>
         <Footer />

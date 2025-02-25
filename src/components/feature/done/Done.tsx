@@ -6,7 +6,7 @@ import { ButtonSquare } from "@components/ui/button/Button";
 import { InfoText } from "@components/ui/text/Text";
 
 const done_ = "done?";
-export const download_ = "download";
+export const generate_ = "generate";
 export const content_default_ = "content default";
 export const back_cover_ = "back cover";
 
@@ -44,7 +44,7 @@ export function Done(prop: IDone) {
     <div css={container}>
       <InfoText text={done_} isDone={isDone} />
       <ButtonSquare
-        text={download_}
+        text={generate_}
         isAvailable={isDone}
         onClick={() => {
           handleCapture();

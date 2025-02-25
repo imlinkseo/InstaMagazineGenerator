@@ -1,19 +1,34 @@
 export const useIsDone = () => {
-  const handleIsContentDone = (template: TTemplate, content: Tcontent) => {
+  const handleIsContentDone = (template: TTemplate, content: TContent) => {
+    if (!content) return false;
+
     switch (template) {
       case "front":
-        return content.title !== null;
+        if ("title" in content) {
+          return content?.title !== null;
+        } else {
+          return false;
+        }
+
       case "back":
-        return content.desc !== null;
+        if ("desc" in content) {
+          return content?.desc !== null;
+        } else {
+          return false;
+        }
       case "content":
-        return content.title && content.desc ? true : false;
+        if ("title" in content && "desc" in content) {
+          return content?.desc !== null && content?.title !== null;
+        } else {
+          return false;
+        }
       default:
-        return content.title && content.desc ? true : false;
+        return false;
     }
   };
 
   const handleIsAllDone = (
-    content: Tcontent,
+    content: TContent,
     template: TTemplate,
     logo: string | null,
     image: string | null

@@ -2,13 +2,19 @@
 import { CustomTheme } from "src/theme";
 import { css, useTheme } from "@emotion/react";
 import { forwardRef, useState, useEffect } from "react";
-import { WaterMarkText, TitleText, DescText } from "@components/ui/text/Text";
+import {
+  WaterMarkText,
+  TitleText,
+  DescText,
+  LocationText,
+  TagText,
+} from "@components/ui/text/Text";
 
 interface IPreview {
   template: TTemplate;
   logo: string | null;
   image: string | null;
-  content: Tcontent;
+  content: TContent;
   ref: React.RefObject<HTMLDivElement>;
 }
 
@@ -34,8 +40,12 @@ export const Preview = forwardRef<HTMLDivElement, IPreview>(
 
     const replaceTitle = "title";
     const replaceDesc = "description";
+    const replaceLocation = "location";
 
-    const preview_container = (theme: CustomTheme, image: string | null) => css`
+    const preview_container_with_image = (
+      theme: CustomTheme,
+      image: string
+    ) => css`
       display: flex;
       flex-direction: column;
       justify-content: end;
@@ -53,9 +63,10 @@ export const Preview = forwardRef<HTMLDivElement, IPreview>(
       position: relative;
       overflow: hidden;
 
+      background-image: url(${image});
       background-color: ${theme.colors.bg};
-      background-image: ${image ? `url(${image})` : "none"};
       background-size: cover;
+      background-repeat: no-repeat;
       background-position: center;
     `;
 
@@ -212,7 +223,10 @@ export const Preview = forwardRef<HTMLDivElement, IPreview>(
     const theme = useTheme() as CustomTheme;
 
     return (
-      <div css={preview_container(theme, image ?? replaceImage)} ref={ref}>
+      <div
+        css={preview_container_with_image(theme, image ?? replaceImage)}
+        ref={ref}
+      >
         {template !== "content" && (
           <img
             src={logo ?? replaceLogo}
@@ -221,6 +235,8 @@ export const Preview = forwardRef<HTMLDivElement, IPreview>(
               preview_logo(theme, windowWidth),
               preview_logo_location(template, windowWidth),
             ]}
+            loading="eager"
+            crossOrigin="anonymous"
           />
         )}
         <div css={water_mark_container(windowWidth)}>
@@ -236,7 +252,7 @@ export const Preview = forwardRef<HTMLDivElement, IPreview>(
                 content_container_padding(theme, template, windowWidth),
               ]}
             >
-              {(template === "front" || template === "content") && (
+              {content && "title" in content && (
                 <TitleText
                   text={content.title}
                   replace={replaceTitle}
@@ -244,7 +260,21 @@ export const Preview = forwardRef<HTMLDivElement, IPreview>(
                   windowWidth={windowWidth}
                 />
               )}
-              {(template === "content" || template === "back") && (
+              {content && "location" in content && (
+                <LocationText
+                  text={content.location}
+                  replace={replaceLocation}
+                  windowWidth={windowWidth}
+                />
+              )}
+              {content && "tag" in content && (
+                <TagText
+                  text={content.tag}
+                  replace={replaceLocation}
+                  windowWidth={windowWidth}
+                />
+              )}
+              {content && "desc" in content && (
                 <DescText
                   text={content.desc}
                   replace={replaceDesc}

@@ -12,6 +12,7 @@ import { ReactComponent as Minus } from "@svgs/minus.svg";
 
 interface IForm {
   template: TTemplate;
+  contentTemplate: TContentTemplate;
   logo: string | null;
   handleLogoClick: () => void;
   handleLogoChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -22,7 +23,7 @@ interface IForm {
   handleImageChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleImageDelete: () => void;
   imageRef: RefObject<HTMLInputElement>;
-  content: Tcontent;
+  content: TContent;
   isModalOpen: boolean;
   setIsModalOpen: React.Dispatch<SetStateAction<boolean>>;
   handleTitleChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
@@ -34,6 +35,7 @@ interface IForm {
 export function Generator(prop: IForm) {
   const {
     template,
+    contentTemplate,
     logo,
     handleLogoClick,
     handleLogoChange,
@@ -65,6 +67,47 @@ export function Generator(prop: IForm) {
   const cancel = "delete";
   const info_ = "fill";
 
+  const renderContentTemplate = (contentTemplate: TContentTemplate) => {
+    if (
+      template !== "content" ||
+      contentTemplate === null ||
+      handleTitleChange === undefined ||
+      handleDescChange === undefined
+    )
+      return null;
+
+    const templateComponents: Record<string, JSX.Element> = {
+      default: (
+        <>
+          <InputTextArea
+            name={title_}
+            id={title_}
+            placeholder={title_placeholder}
+            value={
+              content && "title" in content && content.title
+                ? content.title
+                : ""
+            }
+            onChange={handleTitleChange}
+          />
+          <InputTextArea
+            name={desc_}
+            id={desc_}
+            placeholder={desc_placeholder}
+            value={
+              content && "desc" in content && content.desc ? content.desc : ""
+            }
+            onChange={handleDescChange}
+          />
+        </>
+      ),
+      location: <></>,
+      tag: <></>,
+    };
+
+    return templateComponents[contentTemplate] || null;
+  };
+
   const { handleIsContentDone } = useIsDone();
 
   const form = (theme: CustomTheme) => css`
@@ -90,7 +133,6 @@ export function Generator(prop: IForm) {
           handleIsContentDone(template, content)
         }
       />
-
       {template !== "content" && (
         <>
           <ButtonRound
@@ -137,17 +179,10 @@ export function Generator(prop: IForm) {
         cancelText={cancel}
         onCancel={handleCancelContent}
       >
-        {template === "front" && handleTitleChange && (
-          <InputTextArea
-            name={title_}
-            id={title_}
-            placeholder={title_placeholder}
-            value={content.title ?? ""}
-            onChange={handleTitleChange}
-          />
-        )}
-        {template === "content" && handleTitleChange && handleDescChange && (
-          <>
+        {template === "front" &&
+          handleTitleChange &&
+          content &&
+          "title" in content && (
             <InputTextArea
               name={title_}
               id={title_}
@@ -155,6 +190,12 @@ export function Generator(prop: IForm) {
               value={content.title ?? ""}
               onChange={handleTitleChange}
             />
+          )}
+        {renderContentTemplate(contentTemplate)}
+        {template === "back" &&
+          handleDescChange &&
+          content &&
+          "desc" in content && (
             <InputTextArea
               name={desc_}
               id={desc_}
@@ -162,17 +203,7 @@ export function Generator(prop: IForm) {
               value={content.desc ?? ""}
               onChange={handleDescChange}
             />
-          </>
-        )}
-        {template === "back" && handleDescChange && (
-          <InputTextArea
-            name={desc_}
-            id={desc_}
-            placeholder={desc_placeholder}
-            value={content.desc ?? ""}
-            onChange={handleDescChange}
-          />
-        )}
+          )}
       </ConfirmModal>
     </form>
   );
