@@ -3,7 +3,6 @@ import { CustomTheme } from "src/theme";
 import { css, useTheme } from "@emotion/react";
 import { forwardRef, useState, useEffect } from "react";
 import {
-  WaterMarkText,
   TitleText,
   DescText,
   LocationText,
@@ -14,7 +13,7 @@ interface IPreview {
   template: TTemplate;
   logo: string | null;
   image: string | null;
-  content: TContent;
+  content: TContent<TTemplate>;
   ref: React.RefObject<HTMLDivElement>;
 }
 
@@ -35,12 +34,13 @@ export const Preview = forwardRef<HTMLDivElement, IPreview>(
     }, []);
 
     const water_mark_ = "imlinkseo";
-    const replaceLogo = `/InstaMagazineGenerator/assets/logo.png?v=${new Date().getTime()}`;
+    const replaceLogo = `/InstaMagazineGenerator/assets/logo_white.png?v=${new Date().getTime()}`;
 
-    const replaceTitle = "title";
-    const replaceDesc = "description";
-    const replaceLocation = "location";
-    const replaceTag = "tag";
+    const replaceTitle_ = "title";
+    const replaceDesc_ = "description";
+    const replaceDesc_back_ = "follow XXX and get more information";
+    const replaceLocation_ = "location";
+    const replaceTag_ = "tag";
 
     const preview_container_with_image = (
       theme: CustomTheme,
@@ -212,13 +212,43 @@ export const Preview = forwardRef<HTMLDivElement, IPreview>(
           `;
       }
     };
-    const water_mark_container = (windowWidth: number) => css`
-      position: absolute;
-      bottom: ${windowWidth / 72}px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 1;
-    `;
+
+    const isTContentHasTitle = (
+      content: TContent<TTemplate, TContentTemplate>
+    ): content is { title: string | null } => {
+      return (
+        content !== null && typeof content === "object" && "title" in content
+      );
+    };
+    const isTContentLocation = (
+      content: TContent<TTemplate, TContentTemplate>
+    ): content is TContentLocation => {
+      return (
+        content !== null && typeof content === "object" && "location" in content
+      );
+    };
+    const isTContentTag = (
+      content: TContent<TTemplate, TContentTemplate>
+    ): content is TContentTag => {
+      return (
+        content !== null && typeof content === "object" && "tag" in content
+      );
+    };
+    const isTContentHasDesc = (
+      content: TContent<TTemplate, TContentTemplate>
+    ): content is { desc: string | null } => {
+      return (
+        content !== null && typeof content === "object" && "desc" in content
+      );
+    };
+
+    // const water_mark_container = (windowWidth: number) => css`
+    //   position: absolute;
+    //   bottom: ${windowWidth / 72}px;
+    //   left: 50%;
+    //   transform: translateX(-50%);
+    //   z-index: 1;
+    // `;
 
     const title_container = (theme: CustomTheme) => css`
       width: 100%;
@@ -257,33 +287,35 @@ export const Preview = forwardRef<HTMLDivElement, IPreview>(
               ]}
             >
               <div css={title_container(theme)}>
-                {content && "title" in content && (
+                {isTContentHasTitle(content) && (
                   <TitleText
                     text={content.title}
-                    replace={replaceTitle}
+                    replace={replaceTitle_}
                     template={template}
                     windowWidth={windowWidth}
                   />
                 )}
-                {content && "location" in content && (
+                {isTContentLocation(content) && (
                   <LocationText
                     text={content.location}
-                    replace={replaceLocation}
+                    replace={replaceLocation_}
                     windowWidth={windowWidth}
                   />
                 )}
-                {content && "tag" in content && (
+                {isTContentTag(content) && (
                   <TagText
                     text={content.tag}
-                    replace={replaceTag}
+                    replace={replaceTag_}
                     windowWidth={windowWidth}
                   />
                 )}
               </div>
-              {content && "desc" in content && (
+              {isTContentHasDesc(content) && (
                 <DescText
                   text={content.desc}
-                  replace={replaceDesc}
+                  replace={
+                    template === "back" ? replaceDesc_back_ : replaceDesc_
+                  }
                   template={template}
                   windowWidth={windowWidth}
                 />

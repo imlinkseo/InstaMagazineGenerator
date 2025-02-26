@@ -15,12 +15,14 @@ import { ButtonText } from "@components/ui/text/Text";
 import { Loading } from "@components/ui/loading/Loading";
 
 export default function GeneratePage() {
+  const replaceLogo = `/InstaMagazineGenerator/assets/logo_white.png?v=${new Date().getTime()}`;
   const [template, setTemplate] = useState<TTemplate>(null);
   const [contentTemplate, setContentTemplate] =
     useState<TContentTemplate>(null);
   const [image, setImage] = useState<string | null>(null);
-  const [logo, setLogo] = useState<string | null>(null);
-  const [content, setContent] = useState<TContent>(null);
+  const [logo, setLogo] = useState<string | null>(replaceLogo);
+  const [content, setContent] =
+    useState<TContent<TTemplate, TContentTemplate>>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const imageRef = useRef<HTMLInputElement>(null);
   const logoRef = useRef<HTMLInputElement>(null);
@@ -83,7 +85,7 @@ export default function GeneratePage() {
   };
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setContent((prev: TContent) => {
+    setContent((prev) => {
       if (prev && "title" in prev) {
         return {
           ...prev,
@@ -95,7 +97,7 @@ export default function GeneratePage() {
   };
 
   const handleDescChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setContent((prev: TContent) => {
+    setContent((prev) => {
       if (prev && "desc" in prev) {
         return {
           ...prev,
@@ -134,9 +136,11 @@ export default function GeneratePage() {
         setContent(initialContent.front);
         break;
       case "content":
-        setContent(
-          contentTemplate ? initialContent.content[contentTemplate] : null
-        );
+        if (contentTemplate) {
+          setContent(initialContent.content[contentTemplate] ?? null);
+        } else {
+          setContent(null);
+        }
         break;
       case "back":
         setContent(initialContent.back);
@@ -234,12 +238,6 @@ export default function GeneratePage() {
     const scale = Math.floor(window.devicePixelRatio) || 1;
 
     await waitForImages(captureRef.current);
-
-    // (captureRef.current as HTMLDivElement).style.margin = "0";
-    // (captureRef.current as HTMLDivElement).style.padding = "0";
-    // (captureRef.current as HTMLDivElement).style.overflow = "hidden";
-    // (captureRef.current as HTMLDivElement).style.backgroundColor =
-    //   "transparent";
 
     setTimeout(async () => {
       const canvas = await html2canvas(captureRef.current as HTMLDivElement, {
@@ -357,56 +355,48 @@ export default function GeneratePage() {
   function handleContentChange(contentTemplate: TContentTemplate) {
     switch (contentTemplate) {
       case "default":
-        setContent((prev) => {
-          return {
-            title:
-              prev && "title" in prev
-                ? prev.title
-                : initialContent.content.default.title,
-            desc:
-              prev && "desc" in prev
-                ? prev.desc
-                : initialContent.content.default.desc,
-          };
-        });
+        setContent((prev) => ({
+          title:
+            prev && "title" in prev
+              ? prev.title
+              : initialContent.content.default.title,
+          desc:
+            prev && "desc" in prev
+              ? prev.desc
+              : initialContent.content.default.desc,
+        }));
         break;
       case "location":
-        setContent((prev) => {
-          return {
-            title:
-              prev && "title" in prev
-                ? prev.title
-                : initialContent.content.location.title,
-            desc:
-              prev && "desc" in prev
-                ? prev.desc
-                : initialContent.content.location.desc,
-            location:
-              prev && "location" in prev
-                ? prev.location
-                : initialContent.content.location.location,
-          };
-        });
+        setContent((prev) => ({
+          title:
+            prev && "title" in prev
+              ? prev.title
+              : initialContent.content.location.title,
+          desc:
+            prev && "desc" in prev
+              ? prev.desc
+              : initialContent.content.location.desc,
+          location:
+            prev && "location" in prev
+              ? prev.location
+              : initialContent.content.location.location,
+        }));
         break;
       case "tag":
-        setContent((prev) => {
-          return {
-            title:
-              prev && "title" in prev
-                ? prev.title
-                : initialContent.content.tag.title,
-            desc:
-              prev && "desc" in prev
-                ? prev.desc
-                : initialContent.content.tag.desc,
-            tag:
-              prev && "tag" in prev ? prev.tag : initialContent.content.tag.tag,
-          };
-        });
+        setContent((prev) => ({
+          title:
+            prev && "title" in prev
+              ? prev.title
+              : initialContent.content.tag.title,
+          desc:
+            prev && "desc" in prev
+              ? prev.desc
+              : initialContent.content.tag.desc,
+          tag:
+            prev && "tag" in prev ? prev.tag : initialContent.content.tag.tag,
+        }));
         break;
       case null:
-        setContent(null);
-        break;
       default:
         setContent(null);
         break;
@@ -481,9 +471,13 @@ export default function GeneratePage() {
                 content={content}
                 ref={captureRef}
               />
-              {handleIsAllDone(content, template, logo, image) && (
-                <Done isDone={true} handleCapture={handleCapture} />
-              )}
+              {handleIsAllDone(
+                content,
+                template,
+                contentTemplate,
+                logo,
+                image
+              ) && <Done isDone={true} handleCapture={handleCapture} />}
             </>
           )
         : template &&
@@ -521,9 +515,13 @@ export default function GeneratePage() {
                 content={content}
                 ref={captureRef}
               />
-              {handleIsAllDone(content, template, logo, image) && (
-                <Done isDone={true} handleCapture={handleCapture} />
-              )}
+              {handleIsAllDone(
+                content,
+                template,
+                contentTemplate,
+                logo,
+                image
+              ) && <Done isDone={true} handleCapture={handleCapture} />}
             </>
           )}
       <Modal

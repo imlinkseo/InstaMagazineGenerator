@@ -1,40 +1,53 @@
 export const useIsDone = () => {
-  const handleIsContentDone = (template: TTemplate, content: TContent) => {
+  const handleIsContentDone = (
+    template: TTemplate,
+    contentTemplate: TContentTemplate,
+    content: TContent<TTemplate, TContentTemplate>
+  ) => {
     if (!content) return false;
 
     switch (template) {
       case "front":
-        if ("title" in content) {
-          return content?.title !== null;
-        } else {
-          return false;
-        }
+        return "title" in content && content.title !== null;
 
       case "back":
-        if ("desc" in content) {
-          return content?.desc !== null;
-        } else {
-          return false;
-        }
+        return "desc" in content && content.desc !== null;
       case "content":
         if ("title" in content && "desc" in content) {
-          return content?.desc !== null && content?.title !== null;
-        } else {
-          return false;
+          if (content.title === null || content.desc === null) return false;
+
+          switch (contentTemplate) {
+            case "location":
+              return "location" in content && content.location !== null;
+            case "tag":
+              return "tag" in content && content.tag !== null;
+            case "default":
+              return true;
+            case null:
+              return false;
+            default:
+              return false;
+          }
         }
+        return false;
       default:
         return false;
     }
   };
 
   const handleIsAllDone = (
-    content: TContent,
+    content: TContent<TTemplate, TContentTemplate>,
     template: TTemplate,
+    contentTemplate: TContentTemplate,
     logo: string | null,
     image: string | null
   ) => {
     if (template) {
-      const isContentDone = handleIsContentDone(template, content);
+      const isContentDone = handleIsContentDone(
+        template,
+        contentTemplate,
+        content
+      );
       if (template === "content") {
         if (isContentDone && image) {
           return true;

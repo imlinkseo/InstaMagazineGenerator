@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { CustomTheme } from "src/theme";
 import { css, useTheme } from "@emotion/react";
-import { RefObject, SetStateAction } from "react";
+import { RefObject, SetStateAction, useMemo } from "react";
 import { InfoText } from "@components/ui/text/Text";
 import { ConfirmModal } from "@components/ui/modal/Modal";
 import { ButtonRound } from "@components/ui/button/Button";
@@ -23,7 +23,7 @@ interface IForm {
   handleImageChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleImageDelete: () => void;
   imageRef: RefObject<HTMLInputElement>;
-  content: TContent;
+  content: TContent<TTemplate, TContentTemplate>;
   isModalOpen: boolean;
   setIsModalOpen: React.Dispatch<SetStateAction<boolean>>;
   handleTitleChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
@@ -75,124 +75,98 @@ export function Generator(prop: IForm) {
   const cancel = "delete";
   const info_ = "fill";
 
-  const renderContentTemplate = (contentTemplate: TContentTemplate) => {
-    if (template !== "content" || contentTemplate === null) return null;
+  const renderFrontTemplateContent = useMemo(() => {
+    if (
+      template !== "front" ||
+      handleTitleChange === undefined ||
+      content === null ||
+      !("title" in content)
+    )
+      return null;
 
-    const templateComponents: Record<string, JSX.Element> = {
-      default: (
-        <>
-          {handleTitleChange && (
-            <InputTextArea
-              name={title_}
-              id={title_}
-              placeholder={title_placeholder}
-              value={
-                content && "title" in content && content.title
-                  ? content.title
-                  : ""
-              }
-              onChange={handleTitleChange}
-            />
-          )}
-          {handleDescChange && (
-            <InputTextArea
-              name={desc_}
-              id={desc_}
-              placeholder={desc_placeholder}
-              value={
-                content && "desc" in content && content.desc ? content.desc : ""
-              }
-              onChange={handleDescChange}
-            />
-          )}
-        </>
-      ),
-      location: (
-        <>
-          {handleTitleChange && (
-            <InputTextArea
-              name={title_}
-              id={title_}
-              placeholder={title_placeholder}
-              value={
-                content && "title" in content && content.title
-                  ? content.title
-                  : ""
-              }
-              onChange={handleTitleChange}
-            />
-          )}
-          {handleLocationChange && (
+    return (
+      <InputTextArea
+        name={title_}
+        id={title_}
+        placeholder={title_placeholder}
+        value={content.title ?? ""}
+        onChange={handleTitleChange}
+      />
+    );
+  }, [template, content]);
+
+  const renderContentTemplateContent = useMemo(() => {
+    if (template !== "content" || contentTemplate === null || content === null)
+      return null;
+
+    return (
+      <>
+        {handleTitleChange && "title" in content && (
+          <InputTextArea
+            name={title_}
+            id={title_}
+            placeholder={title_placeholder}
+            value={content.title ?? ""}
+            onChange={handleTitleChange}
+          />
+        )}
+        {contentTemplate === "location" &&
+          handleLocationChange &&
+          "location" in content && (
             <InputText
               name={location_}
               id={location_}
               placeholder={location_placeholder}
-              value={
-                content && "location" in content && content.location
-                  ? content.location
-                  : ""
-              }
+              value={content.location ?? ""}
               onChange={handleLocationChange}
             />
           )}
-          {handleDescChange && (
-            <InputTextArea
-              name={desc_}
-              id={desc_}
-              placeholder={desc_placeholder}
-              value={
-                content && "desc" in content && content.desc ? content.desc : ""
-              }
-              onChange={handleDescChange}
-            />
-          )}
-        </>
-      ),
-      tag: (
-        <>
-          {handleTitleChange && (
-            <InputTextArea
-              name={title_}
-              id={title_}
-              placeholder={title_placeholder}
-              value={
-                content && "title" in content && content.title
-                  ? content.title
-                  : ""
-              }
-              onChange={handleTitleChange}
-            />
-          )}
-          {handleTagChange && (
-            <InputText
-              name={tag_}
-              id={tag_}
-              placeholder={tag_placeholder}
-              value={
-                content && "tag" in content && content.tag ? content.tag : ""
-              }
-              onChange={handleTagChange}
-            />
-          )}
-          {handleDescChange && (
-            <InputTextArea
-              name={desc_}
-              id={desc_}
-              placeholder={desc_placeholder}
-              value={
-                content && "desc" in content && content.desc ? content.desc : ""
-              }
-              onChange={handleDescChange}
-            />
-          )}
-        </>
-      ),
-    };
+        {contentTemplate === "tag" && handleTagChange && "tag" in content && (
+          <InputText
+            name={tag_}
+            id={tag_}
+            placeholder={tag_placeholder}
+            value={content.tag ?? ""}
+            onChange={handleTagChange}
+          />
+        )}
+        {handleDescChange && "desc" in content && (
+          <InputTextArea
+            name={desc_}
+            id={desc_}
+            placeholder={desc_placeholder}
+            value={content.desc ?? ""}
+            onChange={handleDescChange}
+          />
+        )}
+      </>
+    );
+  }, [contentTemplate, template, content]);
 
-    return templateComponents[contentTemplate] || null;
-  };
+  const renderBackTemplateContent = useMemo(() => {
+    if (
+      template !== "back" ||
+      handleDescChange === undefined ||
+      content === null ||
+      !("desc" in content)
+    )
+      return null;
+
+    return (
+      <InputTextArea
+        name={desc_}
+        id={desc_}
+        placeholder={desc_placeholder}
+        value={content.desc ?? ""}
+        onChange={handleDescChange}
+      />
+    );
+  }, [template, content]);
 
   const { handleIsContentDone } = useIsDone();
+  const isContentDone = useMemo(() => {
+    return handleIsContentDone(template, contentTemplate, content);
+  }, [template, contentTemplate, content]);
 
   const form = (theme: CustomTheme) => css`
     display: flex;
@@ -211,11 +185,7 @@ export function Generator(prop: IForm) {
     <form css={form(theme)}>
       <InfoText
         text={info_}
-        isDone={
-          logo !== null &&
-          image !== null &&
-          handleIsContentDone(template, content)
-        }
+        isDone={logo !== null && image !== null && isContentDone}
       />
       {template !== "content" && (
         <>
@@ -223,7 +193,7 @@ export function Generator(prop: IForm) {
             text={logo_}
             icon={logo ? <Minus /> : <Plus />}
             isAvailable={logo !== null}
-            onClick={logo ? handleLogoDelete : handleLogoClick}
+            onClick={handleLogoClick}
           />
           <InputFile
             name={logo_}
@@ -238,7 +208,7 @@ export function Generator(prop: IForm) {
         text={image_}
         icon={image ? <Minus /> : <Plus />}
         isAvailable={image !== null}
-        onClick={image ? handleImageDelete : handleImageClick}
+        onClick={handleImageClick}
       />
       <InputFile
         name={image_}
@@ -249,8 +219,8 @@ export function Generator(prop: IForm) {
       />
       <ButtonRound
         text={content_}
-        icon={handleIsContentDone(template, content) ? <Minus /> : <Plus />}
-        isAvailable={handleIsContentDone(template, content)}
+        icon={isContentDone ? <Minus /> : <Plus />}
+        isAvailable={isContentDone}
         onClick={() => {
           setIsModalOpen(!isModalOpen);
         }}
@@ -263,31 +233,9 @@ export function Generator(prop: IForm) {
         cancelText={cancel}
         onCancel={handleCancelContent}
       >
-        {template === "front" &&
-          handleTitleChange &&
-          content &&
-          "title" in content && (
-            <InputTextArea
-              name={title_}
-              id={title_}
-              placeholder={title_placeholder}
-              value={content.title ?? ""}
-              onChange={handleTitleChange}
-            />
-          )}
-        {renderContentTemplate(contentTemplate)}
-        {template === "back" &&
-          handleDescChange &&
-          content &&
-          "desc" in content && (
-            <InputTextArea
-              name={desc_}
-              id={desc_}
-              placeholder={desc_placeholder}
-              value={content.desc ?? ""}
-              onChange={handleDescChange}
-            />
-          )}
+        {template === "front" && renderFrontTemplateContent}
+        {template === "content" && renderContentTemplateContent}
+        {template === "back" && renderBackTemplateContent}
       </ConfirmModal>
     </form>
   );

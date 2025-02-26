@@ -128,7 +128,6 @@ export function LocationText(prop: ILocationText) {
     line-height: 1.5em;
     color: ${theme.colors.wh};
     white-space: nowrap;
-    transform: translateY(0.125em);
 
     &:before {
       position: absolute;
@@ -345,7 +344,7 @@ export function DescText(prop: IPreviewText) {
 
   const desc_style = (theme: CustomTheme) => css`
     color: ${theme.colors.wh};
-    font-weight: ${theme.fontWeight.normal};
+    font-weight: ${theme.fontWeight.light};
     line-height: 1.5em;
     white-space: pre-wrap;
     text-transform: capitalize;
@@ -359,7 +358,7 @@ export function DescText(prop: IPreviewText) {
         `;
       case "content":
         return css`
-          font-size: ${windowWidth / 24}px;
+          font-size: ${windowWidth / 30}px;
         `;
       case "back":
         return css`
