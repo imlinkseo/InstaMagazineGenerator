@@ -186,9 +186,9 @@ export const Preview = forwardRef<HTMLDivElement, IPreview>(
         case "front":
           return css`
             padding-top: ${windowWidth / 7.2}px;
-            padding-right: ${windowWidth / 14.4}px;
+            padding-right: ${windowWidth / 10}px;
             padding-bottom: ${windowWidth / 5.5}px;
-            padding-left: ${windowWidth / 14.4}px;
+            padding-left: ${windowWidth / 10}px;
           `;
         case "content":
           return css`
