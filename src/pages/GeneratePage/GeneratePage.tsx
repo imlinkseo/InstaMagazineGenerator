@@ -277,18 +277,7 @@ export default function GeneratePage() {
         }
         if (rightTrim !== canvas.width) break;
       }
-      let bottomTrim = canvas.height;
-      for (let y = canvas.height - 1; y >= 0; y--) {
-        for (let x = 0; x < canvas.width; x++) {
-          const index = (y * canvas.width + x) * 4;
-          const alpha = imgData.data[index + 3];
-          if (alpha > 0) {
-            bottomTrim = y + 1;
-            break;
-          }
-        }
-        if (bottomTrim !== canvas.height) break;
-      }
+      let bottomTrim = Math.max(canvas.height - 5, 0);
 
       croppedCanvas.width = rightTrim;
       croppedCanvas.height = bottomTrim;
